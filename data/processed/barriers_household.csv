@@ -1,0 +1,27 @@
+sector_name,reason_no_internet_hh,n_unweighted,households,share_within_sector
+Rural,Don't know how to use it,1206,13089354.38,0.40078122120247567
+Rural,Do not need it,610,6848725.18,0.20970021604079642
+Rural,Available but doesn't meet needs,369,3623547.34,0.11094891969837417
+Rural,Don't know what internet is,254,2913701.65,0.08921424782347961
+Rural,Equipment cost too high,264,2805631.77,0.08590527037324078
+Rural,Not available in area,143,890320.77,0.02726061462647392
+Rural,Others,88,880359.22,0.026955603236441594
+Rural,Service cost too high,72,806028.55,0.024679682222268684
+Rural,Have internet access elsewhere,72,551792.12,0.016895250390760907
+Rural,Privacy/security concerns,9,197252.17,0.006039638264988157
+Rural,Cultural reasons / harmful content,4,30219.71,0.0009252933281942868
+Rural,Lack of local content,3,21491.83,0.0006580555177295157
+Rural,No electricity,1,1175.33,3.5987274776183855e-05
+Urban,Don't know how to use it,481,3416282.4899999998,0.36218439714787215
+Urban,Do not need it,291,2128763.97,0.225685404354416
+Urban,Available but doesn't meet needs,145,1183110.77,0.12542998485807444
+Urban,Don't know what internet is,100,610678.07,0.06474232423161706
+Urban,Equipment cost too high,87,525036.05,0.055662804761250906
+Urban,Others,77,500036.16,0.053012388668636404
+Urban,Not available in area,37,288039.87,0.030537154633983876
+Urban,Service cost too high,44,276212.84,0.029283287091373313
+Urban,Have internet access elsewhere,36,242185.51,0.0256758078976367
+Urban,Privacy/security concerns,31,203490.92,0.021573519286242016
+Urban,Lack of local content,3,34534.5,0.0036612478915065342
+Urban,Cultural reasons / harmful content,2,22314.809999999998,0.002365751670412744
+Urban,No electricity,1,1753.75,0.00018592750697793753

@@ -1,0 +1,22 @@
+sector_name,reason_no_internet,n_unweighted,pop_weighted,rate,count_weighted,unreliable,share_within_sector
+Rural,Available but doesn't meet needs,59.0,471270.22000000003,1.0,471270.22000000003,False,0.10769511431619552
+Rural,Do not need it,89.0,630026.21,1.0,630026.21,False,0.14397418259984557
+Rural,Don't know how to use it,151.0,1516286.5,1.0,1516286.5,False,0.3465032183735352
+Rural,Don't know what internet is,15.0,131814.55000000002,1.0,131814.55000000002,True,0.030122385052863878
+Rural,Equipment cost too high,43.0,426879.23,1.0,426879.23,False,0.09755084349284687
+Rural,Lack of local content,1.0,8778.5,1.0,8778.5,True,0.002006071083856566
+Rural,Not allowed to use it,19.0,325446.93,1.0,325446.93,True,0.0743714388110602
+Rural,Not available in area,54.0,484895.82,1.0,484895.82,False,0.1108088492549887
+Rural,Others,15.0,139915.24,1.0,139915.24,True,0.03197356235744735
+Rural,Privacy/security concerns,2.0,28020.88,1.0,28020.88,True,0.0064033578757435525
+Rural,Service cost too high,19.0,212632.49,1.0,212632.49,True,0.048590976781616495
+Urban,Available but doesn't meet needs,51.0,239486.4,1.0,239486.4,False,0.11285443122146842
+Urban,Do not need it,72.0,521853.54,1.0,521853.54,False,0.2459157782555077
+Urban,Don't know how to use it,83.0,586641.81,1.0,586641.81,False,0.2764462942291619
+Urban,Don't know what internet is,8.0,48143.759999999995,1.0,48143.759999999995,True,0.022687036306290802
+Urban,Equipment cost too high,15.0,122714.9,1.0,122714.9,True,0.057827585373947644
+Urban,Not allowed to use it,15.0,91789.84,1.0,91789.84,True,0.04325460729757343
+Urban,Not available in area,25.0,174369.86,1.0,174369.86,True,0.08216922285552364
+Urban,Others,12.0,149579.82,1.0,149579.82,True,0.0704872824022977
+Urban,Privacy/security concerns,10.0,144909.25,1.0,144909.25,True,0.06828634522661652
+Urban,Service cost too high,6.0,42593.2,1.0,42593.2,True,0.020071416831612354
