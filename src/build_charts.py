@@ -164,6 +164,85 @@ def fig4_states(adults):
     plt.close(fig)
 
 
+def fig5_capability_vs_usage():
+    """The merge chart: does capability predict usage, and who deviates?"""
+    from scipy import stats as _st
+    from cmst import load_person as _lp
+    from npci import load_npci, quarter_totals, allocate
+    from build_npci_analysis import capability_by_state
+
+    cap = capability_by_state()
+    npci = load_npci()
+    qt, unc_vol, _ = quarter_totals(npci)
+    d = qt.merge(cap[["state", "adult_pop", "upi_capable_rate",
+                      "upi_capable_pop"]], on="state")
+    d = allocate(d, unc_vol, "excluded")
+
+    fit = _st.linregress(d["upi_capable_rate"], d["txn_per_adult"])
+    d["resid"] = d["txn_per_adult"] - (fit.intercept + fit.slope * d["upi_capable_rate"])
+
+    fig, ax = plt.subplots(figsize=(9.5, 6.5))
+
+    xs = np.linspace(d["upi_capable_rate"].min() - 0.03,
+                     d["upi_capable_rate"].max() + 0.03, 50)
+    ax.plot(xs, fit.intercept + fit.slope * xs, color=MUTED, lw=1.2,
+            ls="--", zorder=1)
+
+    below = d[d["resid"] < 0]
+    above = d[d["resid"] >= 0]
+    ax.scatter(above["upi_capable_rate"], above["txn_per_adult"],
+               s=46, color=COOL, zorder=3, label="Converts above trend")
+    ax.scatter(below["upi_capable_rate"], below["txn_per_adult"],
+               s=46, color=ACCENT, zorder=3, label="Capable but not converting")
+
+    # Label only the states that carry the argument: the clear over- and
+    # under-performers, plus Tripura at the extreme low end. States sitting on
+    # the trend line are left unlabelled -- they illustrate the fit rather than
+    # deviate from it, and naming them only adds clutter.
+    #
+    # Chhattisgarh and West Bengal nearly coincide, as do Mizoram and Sikkim.
+    # Each pair is split across opposite sides of its markers, and the vertical
+    # offset follows the dot's actual position -- the lower dot gets the lower
+    # label. Same-side placement leaves it ambiguous which label belongs to
+    # which point, and an inverted offset is worse than none.
+    labels = {
+        "Goa":              (9, -1, "left"),
+        "Delhi":            (9, -1, "left"),
+        "Telangana":        (9, -1, "left"),
+        "Chandigarh":       (-9, -1, "right"),
+        "Maharashtra":      (9, -1, "left"),
+        "Manipur":          (9, -1, "left"),
+        "Himachal Pradesh": (9, -1, "left"),
+        "Meghalaya":        (9, -1, "left"),
+        "Tripura":          (9, -1, "left"),
+        "Bihar":            (9, -1, "left"),
+        "Mizoram":          (9, -7, "left"),    # rightmost, lower
+        "Sikkim":           (-9, 9, "right"),   # leftmost, higher
+        "Chhattisgarh":     (-9, 8, "right"),   # higher of the pair
+        "West Bengal":      (9, -8, "left"),    # lower of the pair
+    }
+    for name, (dx, dy, ha) in labels.items():
+        row = d[d["state"] == name]
+        if not row.shape[0]:
+            continue
+        ax.annotate(name,
+                    (row["upi_capable_rate"].iloc[0],
+                     row["txn_per_adult"].iloc[0]),
+                    textcoords="offset points", xytext=(dx, dy),
+                    ha=ha, va="center", fontsize=8.5, color=INK)
+
+    ax.xaxis.set_major_formatter(lambda x, _: f"{x:.0%}")
+    ax.set_xlabel("Share of adults able to transact via UPI")
+    ax.set_ylabel("UPI transactions per adult, Q1 2025")
+    ax.legend(frameon=False, loc="upper left")
+    ax.set_title(f"Capability explains about 40% of the story\n"
+                 f"State UPI usage against capability  (R² = {fit.rvalue**2:.2f})",
+                 loc="left", fontsize=13, weight="bold", color=INK, pad=14)
+    fig.tight_layout()
+    fig.savefig(OUTPUTS / "fig5_capability_vs_usage.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def main():
     person = load_person()
     hh = load_household()
@@ -173,7 +252,14 @@ def main():
     fig2_barriers(hh)
     fig3_conversion(adults)
     fig4_states(adults)
-    print(f"4 figures written to {OUTPUTS}/")
+
+    try:
+        fig5_capability_vs_usage()
+        n = 5
+    except FileNotFoundError as e:
+        print(f"skipping fig5 (NPCI data not present): {e}")
+        n = 4
+    print(f"{n} figures written to {OUTPUTS}/")
 
 
 if __name__ == "__main__":

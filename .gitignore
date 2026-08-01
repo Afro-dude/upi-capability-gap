@@ -1,5 +1,6 @@
 data/raw/
 *.dta
+*.xlsx
 __pycache__/
 *.pyc
 venv/

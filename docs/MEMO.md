@@ -1,6 +1,6 @@
-# India's UPI capability gap is a skills problem, not an access problem
+# India's UPI capability gap is a skills problem, and it is worth 4.5-6.7 billion transactions a month
 
-**Analysis of NSS 80th Round, Comprehensive Modular Survey: Telecom (Jan–Mar 2025)**
+**NSS 80th Round, Comprehensive Modular Survey: Telecom (Jan–Mar 2025), joined to NPCI state-wise UPI statistics for the same quarter**
 1,42,065 individuals · 34,950 households · weighted to 91.4 crore adults
 
 ---
@@ -116,6 +116,64 @@ smartphone purchase.
 
 ---
 
+## Finding 5 — Capability explains 40% of usage; the rest is a different problem
+
+Joining NPCI's state-wise UPI volumes for the same quarter tests whether the
+capability gap actually shows up in transactions. It does, partially:
+**R² = 0.405**, p < 0.001, with each 10 percentage points of capability
+associated with roughly 15 additional quarterly transactions per adult.
+
+The 60% left unexplained is where the interesting states are. Ranked by how far
+they fall *below* the trend line:
+
+| State | Capable | Actual txns/adult | Expected | Shortfall |
+|---|---|---|---|---|
+| Manipur | 61.6% | 15.0 | 52.9 | −37.9 |
+| Himachal Pradesh | 64.3% | 30.2 | 56.9 | −26.6 |
+| Meghalaya | 53.0% | 16.8 | 40.2 | −23.4 |
+| Jammu & Kashmir | 58.1% | 24.7 | 47.8 | −23.1 |
+| Mizoram | 67.2% | 39.0 | 61.3 | −22.3 |
+| Sikkim | 66.7% | 39.1 | 60.5 | −21.5 |
+
+Every one is a Northeastern or hill state, and several rank *high* on capability
+— Mizoram and Sikkim are in the national top five. These are not places where
+people cannot use UPI. They are places where people can and do not.
+
+That points at merchant-side acceptance rather than consumer enablement: QR
+density, connectivity at point of sale, cash preference in local commerce. A
+capability programme aimed at these states would be solving a problem they have
+already solved.
+
+The states above the trend — Goa, Delhi, Telangana, Chandigarh, Maharashtra —
+should be read with care. Per-capita usage is resident-denominated while volume
+includes payments by visitors and by businesses headquartered there, so tourism
+and commercial concentration inflate them mechanically.
+
+**On the 40% NPCI cannot place:** between 34.6% and 39.9% of Q1 volume is
+unattributed. This does not undermine the above. Excluding it, splitting it in
+proportion to observed volume, and splitting it by adult population all scale or
+shift every state identically and produce the same r = 0.637. Only allocation by
+capable population changes the answer, and that rule is circular. Details in
+`DATA_NOTES.md` §12.1.
+
+---
+
+## What the gap is worth
+
+Applying the observed benchmark of 71.6 quarterly transactions per capable adult
+to the 46.9 crore gap population, at a 40–60% haircut for the fact that newly
+enabled users transact less than established ones:
+
+**4.5 to 6.7 billion additional transactions per month — a 42% to 63% uplift on
+currently attributed volume.**
+
+Stated as a range because the haircut is a judgement, and labelled an
+*enablement ceiling* rather than a forecast: it is what the opportunity is worth
+if capability were fully closed, not what any particular intervention would
+deliver.
+
+---
+
 ## Recommendation
 
 **Target two segments, in this order.**
@@ -136,6 +194,11 @@ measured in first-transaction conversion, not app installs.
 **Deprioritise** pure coverage expansion as an adoption lever. At 2.8% stated
 as an availability barrier, it is close to exhausted as an explanation.
 
+**Treat the Northeast separately.** Manipur, Meghalaya, Mizoram and Sikkim do
+not have a capability problem. Sending an enablement programme there would
+address a constraint that is not binding; the diagnosis needed is on the
+merchant-acceptance side.
+
 ---
 
 ## What would make this conclusive
@@ -143,12 +206,13 @@ as an availability barrier, it is close to exhausted as an explanation.
 This analysis establishes where capability is missing and what people say is
 stopping them. Three things it cannot do, and how to close each:
 
-- **Capability is not usage.** Q12 measures ability, not behaviour. Merging
-  NPCI's state-wise transaction volumes onto the state capability file
-  (`state_level.csv`, columns already reserved) would show whether high-capability
-  states actually transact more, and identify states that are capable but not
-  converting — a different problem again. Note that a large share of NPCI's
-  state-wise volume is unclassified and must be handled explicitly.
+- **Merchant-side data.** The unexplained 60% of state variation is the biggest
+  open question. QR deployment density or merchant acquiring counts by state
+  would test the acceptance hypothesis directly.
+- **Confidence intervals.** Every estimate here is a point estimate. The
+  methodology document gives the variance formula for the two-stage design;
+  implementing it would put error bars on the state rankings, which is where
+  they matter most.
 - **No causal claim.** The gender gap's persistence among internet users is
   suggestive, not identified. Testing it needs account-ownership data — Global
   Findex would serve.

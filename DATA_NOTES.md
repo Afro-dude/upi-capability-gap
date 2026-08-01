@@ -211,3 +211,112 @@ Stated plainly, because these are the questions an interviewer should ask:
   "unclassified" and cannot be attributed to any state, so any per-capita
   figure must state whether that residual was excluded or distributed.
 - Standard errors, per section 2 above.
+
+---
+
+## 12. NPCI state-wise transaction data
+
+**Source.** NPCI Ecosystem Statistics → *UPI Statewise Statistics*, monthly
+XLSX. Jan, Feb and Mar 2025 are used, chosen to match the CMS-T field period
+exactly so that capability and volume describe the same quarter. Using a later
+month would compare Jan–Mar 2025 capability against a period over which UPI grew
+substantially.
+
+**File shape.** Row 0 is a merged title cell; the real header is row 1. Volume
+and value arrive as strings with Indian-style comma grouping and must be
+de-comma'd before conversion. 36 states/UTs plus one `UNCLASSIFIED#` row.
+
+**Name mapping.** Three NPCI names differ from the NSS code list and are mapped
+explicitly: `JAMMU AND KASHMIR`, `DADRA & NAGAR HAVELI & DAMAN & DIU`,
+`ANDAMAN & NICOBAR`. The remaining 33 match on uppercase. The loader raises if
+any name fails to map rather than silently dropping a state — all 36 match.
+
+### 12.1 The unattributed volume, and why it turns out not to matter
+
+NPCI's disclaimer states that where location data was not received, the
+transaction is categorised as unclassified. In Q1 2025:
+
+| Month | Unclassified, volume | Unclassified, value |
+|---|---|---|
+| Jan 2025 | 34.6% | 32.6% |
+| Feb 2025 | 39.8% | 37.5% |
+| Mar 2025 | 39.9% | 37.4% |
+
+A 5.3pp swing inside a single quarter, so the share is not stable either.
+
+This looks disqualifying for state comparison, and the instinct to abandon the
+merge is reasonable. It is also wrong, for a mechanical reason.
+
+Four allocation rules were tested (`npci.allocate`):
+
+| Rule | Effect on each state's transactions-per-adult |
+|---|---|
+| `excluded` | baseline |
+| `proportional` | multiplies every state by the same constant |
+| `by_adults` | adds the same constant to every state |
+| `by_capable` | adds a term proportional to that state's capability rate |
+
+Multiplying every observation by a constant, or adding a constant to every
+observation, changes neither a rank ordering nor a Pearson correlation. So the
+first three rules are mathematically guaranteed to give identical answers — and
+they do, at r = 0.637 with rank correlation 1.000 against each other.
+
+`by_capable` gives r = 0.731, and that difference is an artefact, not a finding.
+Allocating unattributed volume in proportion to capable population and then
+correlating the result against capability rate builds the relationship into the
+data. **It must not be used to test the capability–usage relationship**, and it
+is retained in the code only as a demonstration of the trap.
+
+**Conclusion:** the unclassified bucket limits the interpretation of *absolute*
+per-capita levels — every state's figure is understated by roughly 40% — but is
+provably irrelevant to *relative* comparison, which is what the analysis rests
+on. All published results use `excluded`, the most conservative rule.
+
+### 12.2 Ecological inference
+
+Capability comes from person-level survey records; volume comes from
+state-level administrative aggregates. The merge therefore supports claims about
+states and not about individuals within them.
+
+Concretely: it is supported to say "states with lower capability transact less
+per adult." It is **not** supported to say "rural women aged 45+ generate X
+transactions" — their transactions are never observed. The segment breakdowns in
+this project are breakdowns of the *capability gap*; the volume estimate is a
+state-level projection applied to that gap, and is labelled as such.
+
+### 12.3 Per-capita usage is resident-denominated
+
+Transaction volume attributed to a state includes payments made by visitors and
+by businesses headquartered there, while the denominator is resident adults.
+Goa (+66.6 residual) and Delhi (+37.0) are the clearest cases — tourism and
+commercial concentration respectively. Their positive residuals should not be
+read as residents transacting unusually often.
+
+This is a genuine limitation on the residual analysis and cannot be fixed with
+the available data. It matters less for the negative residuals, which is where
+the argument in Finding 6 sits.
+
+### 12.4 The sizing calculation
+
+```
+unrealised transactions = gap population
+                        × transactions per capable adult
+                        × haircut
+```
+
+- **Benchmark:** 71.6 transactions per capable adult per quarter, computed as
+  attributed Q1 volume divided by weighted capable adult population.
+- **Gap population:** 46.9 crore adults aged 15+ who are not UPI-capable.
+- **Haircut:** 40% and 60% of benchmark, reported as a range.
+
+The haircut exists because newly enabled users are not drawn from the same
+distribution as existing ones — they skew older, poorer, more rural and more
+female, all of which predict lower transaction frequency. No haircut at all
+would assume the marginal user behaves like the average user, which is
+implausible on the face of it. The 40–60% band is a judgement, not an estimate
+from data, and is stated as such.
+
+The result — 4.5 to 6.7 billion transactions per month, a 42–63% uplift on
+attributed volume — is an **enablement ceiling**. It answers how large the
+opportunity is if capability were closed, not what would happen under any
+particular intervention.
