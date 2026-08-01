@@ -100,7 +100,9 @@ streamlit run app.py
 
 ### Power BI
 
-A star-schema export for Power BI is produced by
+![Power BI dashboard](outputs/powerbi_dashboard.png)
+
+The `.pbix` is in the repository root. A star-schema export is produced by
 `src/build_powerbi_export.py` (ten CSVs in `data/powerbi/`), with the model,
 DAX measures and page layout in [`docs/POWERBI_BUILD.md`](docs/POWERBI_BUILD.md).
 
