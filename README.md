@@ -63,16 +63,6 @@ computed yet (see Limitations).*
 
 Full argument and recommendations: [`docs/MEMO.md`](docs/MEMO.md).
 
----
-
-## Figures
-
-| | |
-|---|---|
-| `outputs/fig1_funnel.png` | The adoption funnel and where it breaks |
-| `outputs/fig2_barriers.png` | Skill vs cost vs supply as stated barriers |
-| `outputs/fig3_conversion.png` | The gender gap among people already online |
-| `outputs/fig4_states.png` | State ranking with within-state gender gap |
 
 ---
 
