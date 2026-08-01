@@ -82,6 +82,20 @@ Full argument and recommendations: [`docs/MEMO.md`](docs/MEMO.md).
 
 ---
 
+## Dashboard
+
+An interactive version is in `app.py` — three views: the findings, a segment
+and state explorer, and the reliability checks.
+
+```bash
+streamlit run app.py
+```
+
+It reads only from `data/processed/`, which *is* committed, so it runs without
+the raw microdata and can be deployed straight from this repository.
+
+---
+
 ## On the 40% of UPI volume NPCI cannot place
 
 Between **34.6% and 39.9%** of national UPI volume in Q1 2025 is bucketed as
@@ -137,6 +151,7 @@ land at 30.7 crore households, consistent with external estimates.
 │   │   └── npci/                upi_statewise_2025-{Jan,Feb,Mar}.xlsx
 │   └── processed/               generated tables
 ├── outputs/                     generated figures
+├── app.py                       Streamlit dashboard
 ├── docs/MEMO.md                 the analytical memo
 ├── DATA_NOTES.md                every methodological decision, with sources
 ├── requirements.txt

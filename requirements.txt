@@ -4,3 +4,5 @@ matplotlib
 scipy
 openpyxl
 pyreadstat
+streamlit
+plotly
