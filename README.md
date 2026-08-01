@@ -1,5 +1,7 @@
 # India's Digital Payments Capability Gap
 
+### [Explore the interactive dashboard →](https://upi-capability-gap.streamlit.app/)
+
 Who *can't* use UPI, where they are, where in the adoption chain they get stuck,
 and what closing the gap would be worth — from official survey microdata joined
 to NPCI transaction volumes.
@@ -84,15 +86,17 @@ Full argument and recommendations: [`docs/MEMO.md`](docs/MEMO.md).
 
 ## Dashboard
 
-An interactive version is in `app.py` — three views: the findings, a segment
-and state explorer, and the reliability checks.
+**[upi-capability-gap.streamlit.app](https://upi-capability-gap.streamlit.app/)**
+
+Three views: the findings, a segment and state explorer, and the reliability
+checks. It reads only from `data/processed/`, which *is* committed, so it runs
+without the raw microdata and deploys straight from this repository.
+
+To run it locally:
 
 ```bash
 streamlit run app.py
 ```
-
-It reads only from `data/processed/`, which *is* committed, so it runs without
-the raw microdata and can be deployed straight from this repository.
 
 ### Power BI
 
