@@ -39,13 +39,27 @@ without home internet: digital literacy 47.6%, cost 10.5%, availability **2.8%**
 
 **3. The gap is 60.6% female, and it survives connectivity.** Among adults who
 *already use the internet*, 79% of men can transact online versus 58% of women.
-The within-state gender gap ranges from 5 points (Mizoram) to 46 points
-(D&N Haveli and Daman & Diu).
 
 ![The gap survives connectivity](outputs/fig3_conversion.png)
 
 **4. 45+ is over half the gap.** Capability falls from 67.5% at 25–34 to 31.3%
 at 45–59 to 12.4% at 60+.
+
+**5. Two states with the same headline number can have opposite problems.**
+Mizoram (67.2% capable) and D&N Haveli & Daman & Diu (66.1%) sit one place apart
+in the national ranking, but Mizoram's gender gap is 5 points and D&N Haveli's
+is 46. Comparable overall capability, completely different outcomes for women —
+so the gender gap is not simply a function of development level.
+
+Tripura is the sharpest outlier in the other direction: **22.7% capable, 14
+points below the next-lowest state**, on a sample of 1,457 adults. That is a
+break in the distribution, not a tail.
+
+![UPI capability by state and sex](outputs/fig4_states.png)
+
+*Read the small UTs with caution — Andaman & Nicobar, Lakshadweep and Ladakh
+rest on a few hundred sample adults each, and no confidence intervals are
+computed yet (see Limitations).*
 
 Full argument and recommendations: [`docs/MEMO.md`](docs/MEMO.md).
 
@@ -143,7 +157,8 @@ them because the answer is already determined. Every rate here is therefore over
 - **One quarter.** Jan–Mar 2025. No trend, no causal identification.
 - **No standard errors.** The methodology document gives the variance formula
   for the two-stage SRSWOR design; it is not yet implemented. Point estimates
-  only, and state-level cells are the most affected.
+  only. Large states are unaffected in practice, but small UTs rest on a few
+  hundred observations and their rankings should not be read closely.
 - **MPCE deliberately unused.** MoSPI's user note warns against building
   estimates on auxiliary variables; CMS-T is not a consumption survey.
 - **NPCI merge outstanding.** `data/processed/state_level.csv` reserves columns

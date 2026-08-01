@@ -57,9 +57,6 @@ def fig1_funnel(adults):
     ax.set_title("The bottleneck is not connectivity\n"
                  "Digital payment adoption funnel, India, Jan–Mar 2025",
                  loc="left", fontsize=13, weight="bold", color=INK, pad=14)
-    ax.text(0, -1.05, "Source: NSS 80th Round, Comprehensive Modular Survey: Telecom. "
-                      "Weighted estimates.",
-            fontsize=8, color=MUTED, transform=ax.get_yaxis_transform())
     fig.tight_layout()
     fig.savefig(OUTPUTS / "fig1_funnel.png", bbox_inches="tight")
     plt.close(fig)
@@ -95,8 +92,6 @@ def fig2_barriers(hh):
     ax.set_title("Skill, not supply, keeps households offline\n"
                  "Stated main reason for no internet at home, 4.2 crore households",
                  loc="left", fontsize=13, weight="bold", color=INK, pad=14)
-    ax.text(0, -0.9, "Source: NSS 80th Round CMS:T, Block 5 Q5. Weighted estimates.",
-            fontsize=8, color=MUTED, transform=ax.get_yaxis_transform())
     fig.tight_layout()
     fig.savefig(OUTPUTS / "fig2_barriers.png", bbox_inches="tight")
     plt.close(fig)
@@ -136,9 +131,6 @@ def fig3_conversion(adults):
     ax.set_title("The gap survives connectivity\n"
                  "Share able to transact online, among adults who already use the internet",
                  loc="left", fontsize=13, weight="bold", color=INK, pad=14)
-    ax.text(0, -0.16, "Source: NSS 80th Round CMS:T. Base: adults 15+ who used the "
-                      "internet in the last 3 months.",
-            fontsize=8, color=MUTED, transform=ax.transAxes)
     fig.tight_layout()
     fig.savefig(OUTPUTS / "fig3_conversion.png", bbox_inches="tight")
     plt.close(fig)
@@ -167,9 +159,6 @@ def fig4_states(adults):
     ax.set_title("Two different problems, depending on the state\n"
                  "UPI capability by state and sex; bar length is the gender gap",
                  loc="left", fontsize=13, weight="bold", color=INK, pad=14)
-    ax.text(0, -0.045, "Source: NSS 80th Round CMS:T. States with fewer than 30 sample "
-                       "adults suppressed.",
-            fontsize=8, color=MUTED, transform=ax.transAxes)
     fig.tight_layout()
     fig.savefig(OUTPUTS / "fig4_states.png", bbox_inches="tight")
     plt.close(fig)
