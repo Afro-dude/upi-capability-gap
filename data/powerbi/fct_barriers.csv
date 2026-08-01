@@ -1,0 +1,27 @@
+sector,reason,barrier_group,households,sample_n
+Rural,Don't know how to use it,Digital literacy,13089354.38,1206
+Rural,Do not need it,No perceived need,6848725.18,610
+Rural,Available but doesn't meet needs,No perceived need,3623547.34,369
+Rural,Don't know what internet is,Digital literacy,2913701.65,254
+Rural,Equipment cost too high,Cost,2805631.77,264
+Rural,Not available in area,Availability / supply,890320.77,143
+Rural,Others,Other,880359.22,88
+Rural,Service cost too high,Cost,806028.55,72
+Rural,Have internet access elsewhere,No perceived need,551792.12,72
+Rural,Privacy/security concerns,Other,197252.17,9
+Rural,Cultural reasons / harmful content,Other,30219.71,4
+Rural,Lack of local content,No perceived need,21491.83,3
+Rural,No electricity,Availability / supply,1175.33,1
+Urban,Don't know how to use it,Digital literacy,3416282.49,481
+Urban,Do not need it,No perceived need,2128763.97,291
+Urban,Available but doesn't meet needs,No perceived need,1183110.77,145
+Urban,Don't know what internet is,Digital literacy,610678.07,100
+Urban,Equipment cost too high,Cost,525036.05,87
+Urban,Others,Other,500036.16,77
+Urban,Not available in area,Availability / supply,288039.87,37
+Urban,Service cost too high,Cost,276212.84,44
+Urban,Have internet access elsewhere,No perceived need,242185.51,36
+Urban,Privacy/security concerns,Other,203490.92,31
+Urban,Lack of local content,No perceived need,34534.5,3
+Urban,Cultural reasons / harmful content,Other,22314.81,2
+Urban,No electricity,Availability / supply,1753.75,1

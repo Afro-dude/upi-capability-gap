@@ -94,6 +94,17 @@ streamlit run app.py
 It reads only from `data/processed/`, which *is* committed, so it runs without
 the raw microdata and can be deployed straight from this repository.
 
+### Power BI
+
+A star-schema export for Power BI is produced by
+`src/build_powerbi_export.py` (ten CSVs in `data/powerbi/`), with the model,
+DAX measures and page layout in [`docs/POWERBI_BUILD.md`](docs/POWERBI_BUILD.md).
+
+Rates are deliberately not stored in the export — Power BI computes them as
+measures from summed numerators and denominators. Averaging stored per-state
+rates instead would weight every state equally and put national capability at
+53.6% rather than 48.6%.
+
 ---
 
 ## On the 40% of UPI volume NPCI cannot place
@@ -145,14 +156,18 @@ land at 30.7 crore households, consistent with external estimates.
 │   ├── npci.py                  NPCI state-wise loader and allocation rules
 │   ├── build_analysis.py        validation gate → CMS-T tables
 │   ├── build_npci_analysis.py   allocation sensitivity, regression, sizing
+│   ├── build_powerbi_export.py  star schema for Power BI
 │   └── build_charts.py          the five figures
 ├── data/
 │   ├── raw/                     CMST80HH.dta, CMST80PER.dta  (not committed)
 │   │   └── npci/                upi_statewise_2025-{Jan,Feb,Mar}.xlsx
-│   └── processed/               generated tables
+│   ├── processed/               generated tables
+│   └── powerbi/                 star schema (dim_* and fct_*)
 ├── outputs/                     generated figures
 ├── app.py                       Streamlit dashboard
-├── docs/MEMO.md                 the analytical memo
+├── docs/
+│   ├── MEMO.md                  the analytical memo
+│   └── POWERBI_BUILD.md         model, DAX, page layout
 ├── DATA_NOTES.md                every methodological decision, with sources
 ├── requirements.txt
 └── README.md

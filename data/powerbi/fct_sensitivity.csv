@@ -1,0 +1,5 @@
+allocation_rule,correlation_with_capability,spearman_vs_capability,rank_agreement_with_excluded,highest_usage_state
+excluded,0.6365941285427376,0.7117117117117118,1.0,Goa
+proportional,0.6365941285427377,0.7117117117117118,1.0,Goa
+by_adults,0.6365941285427376,0.7117117117117118,1.0,Goa
+by_capable,0.7310996311788502,0.8064350064350065,0.9812097812097812,Chandigarh
