@@ -97,14 +97,20 @@ def load_person():
         right=False,
     )
 
-    # ---------------- Funnel stages -------------------------------------
-    # Every stage is defined so that "not routed to the question" resolves
-    # to False. This is correct: a person who cannot use a mobile phone or a
-    # computer at all is definitionally not capable of a UPI transaction, and
-    # the schedule simply does not ask them the downstream questions.
+    # Independent indicators, not a sequential adoption funnel. Internet use
+    # can follow access via a computer/tablet; capability need not imply recent use.
 
     q3, q4, q8 = _num(df["b4q3"]), _num(df["b4q4"]), _num(df["b4q8"])
     q9, q10, q12 = _num(df["b4q9"]), _num(df["b4q10"]), _num(df["b4q12"])
+    if df["state"].isna().any():
+        raise ValueError("Unmapped NSS region/state code")
+    if df["weight"].isna().any() or (df["weight"] <= 0).any():
+        raise ValueError("Survey weights must be positive and complete")
+    eligible = (df["age"] >= 15) & q9.isin([1, 2, 3])
+    if (eligible & ~q12.isin([1, 2, 3, 4])).any():
+        raise ValueError("Missing/invalid Q12 for an eligible internet-capable adult")
+    if (q12.notna() & ~q12.isin([1, 2, 3, 4])).any():
+        raise ValueError("Unknown Q12 code")
 
     # Stage 1: can operate a mobile phone or a computer (Block 3, col 5/6)
     df["s1_can_use_device"] = (_num(df["use_mobile"]) == 1) | (_num(df["use_comp"]) == 1)
@@ -193,4 +199,6 @@ def rate_table(df, by, flag, min_n=30):
         include_groups=False,
     ).reset_index()
     out["unreliable"] = out["n_unweighted"] < min_n
+    # This flag is a display threshold, not evidence of statistical precision.
+    out["uncertainty_status"] = "Design-based confidence interval unavailable"
     return out

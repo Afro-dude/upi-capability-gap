@@ -1,5 +1,6 @@
-method,pearson_r_vs_capability,spearman_vs_capability,rank_corr_vs_excluded,top_state
-excluded,0.6365941285427376,0.7117117117117118,1.0,Goa
-proportional,0.6365941285427377,0.7117117117117118,1.0,Goa
-by_adults,0.6365941285427376,0.7117117117117118,1.0,Goa
-by_capable,0.7310996311788502,0.8064350064350065,0.9812097812097812,Chandigarh
+method,pearson_r_vs_capability,spearman_vs_capability,rank_corr_vs_excluded,top_state,interpretation,invariant_by_construction,uses_capability_in_allocation,state_count
+excluded,0.6365941285427376,0.7117117117117118,1.0,Goa,Hypothetical allocation; not an estimate of missing state data,True,False,36
+proportional,0.6365941285427377,0.7117117117117118,1.0,Goa,Hypothetical allocation; not an estimate of missing state data,True,False,36
+by_adults,0.6365941285427376,0.7117117117117118,1.0,Goa,Hypothetical allocation; not an estimate of missing state data,True,False,36
+by_capable,0.7310996311788502,0.8064350064350065,0.9812097812097812,Chandigarh,Hypothetical allocation; not an estimate of missing state data,False,True,36
+by_gap,0.5097209968823266,0.5356499356499357,0.9572715572715573,Goa,Hypothetical allocation; not an estimate of missing state data,False,True,36

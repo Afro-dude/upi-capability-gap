@@ -1,0 +1,1246 @@
+{
+  "name": "UPI Capability Gap",
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "en-US",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "dim_age_band",
+        "lineageTag": "fdf2389e-e390-556f-b6fe-a18e48a6ec5b",
+        "columns": [
+          {
+            "name": "age_band",
+            "dataType": "string",
+            "sourceColumn": "age_band",
+            "summarizeBy": "none",
+            "lineageTag": "c2a691eb-2a65-55d4-9305-56c01544603d",
+            "sortByColumn": "age_sort"
+          },
+          {
+            "name": "age_sort",
+            "dataType": "int64",
+            "sourceColumn": "age_sort",
+            "summarizeBy": "none",
+            "lineageTag": "338980e5-e2b8-5ef1-99a9-a270fa0bf748",
+            "formatString": "#,0"
+          },
+          {
+            "name": "age_group_broad",
+            "dataType": "string",
+            "sourceColumn": "age_group_broad",
+            "summarizeBy": "none",
+            "lineageTag": "9ac41fb2-56da-5e0b-9107-84ffa0c923c9"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_age_band",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"i45WMjTVNTJR0lEw1FFQCs1LSS1SMDZVitVRiFYyMtU1BskYYcgYm+qagGSMgTJAtqklRNgEzNRRMEEVNjPQBgqaAgVBrNhYAA==\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"age_band\", \"age_sort\", \"age_group_broad\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"age_band\", type text}, {\"age_sort\", Int64.Type}, {\"age_group_broad\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_sector",
+        "lineageTag": "5524f3c2-ec23-5bff-a17e-57a2f6e5bd3f",
+        "columns": [
+          {
+            "name": "sector",
+            "dataType": "string",
+            "sourceColumn": "sector",
+            "summarizeBy": "none",
+            "lineageTag": "b919afb3-7afd-5b83-b05c-2f86f22c1518",
+            "sortByColumn": "sector_sort"
+          },
+          {
+            "name": "sector_sort",
+            "dataType": "int64",
+            "sourceColumn": "sector_sort",
+            "summarizeBy": "none",
+            "lineageTag": "7942c047-7246-5341-bd62-96aee9250527",
+            "formatString": "#,0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_sector",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"i45WCiotSsxR0lEwjNVRiFYKLUpKzAPyjGJjAQ==\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"sector\", \"sector_sort\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"sector\", type text}, {\"sector_sort\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_sex",
+        "lineageTag": "498fff84-3723-5176-8af2-c6a6ec9481c1",
+        "columns": [
+          {
+            "name": "sex",
+            "dataType": "string",
+            "sourceColumn": "sex",
+            "summarizeBy": "none",
+            "lineageTag": "8f1ab365-f5a0-52d5-9c53-b6d0fa1f3aeb",
+            "sortByColumn": "sex_sort"
+          },
+          {
+            "name": "sex_sort",
+            "dataType": "int64",
+            "sourceColumn": "sex_sort",
+            "summarizeBy": "none",
+            "lineageTag": "f69ff04a-71b8-5fd8-8626-e4416f80302d",
+            "formatString": "#,0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_sex",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"i45WckvNTcxJVdJRMIzVUYhW8oVwjMCckKLEvOL01LyU1CKgmHFsLAA=\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"sex\", \"sex_sort\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"sex\", type text}, {\"sex_sort\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_state",
+        "lineageTag": "1993aef9-9dd3-507e-afc5-fa025f88a406",
+        "columns": [
+          {
+            "name": "state",
+            "dataType": "string",
+            "sourceColumn": "state",
+            "summarizeBy": "none",
+            "lineageTag": "766c800e-b401-5a5d-bb64-b2e547be6da5"
+          },
+          {
+            "name": "state_code",
+            "dataType": "string",
+            "sourceColumn": "state_code",
+            "summarizeBy": "none",
+            "lineageTag": "ace7a919-a534-5877-a432-eef0a58c6de3"
+          },
+          {
+            "name": "rural_share_of_adults",
+            "dataType": "double",
+            "sourceColumn": "rural_share_of_adults",
+            "summarizeBy": "none",
+            "lineageTag": "00ca7b75-609d-5c68-a186-ea6800d699bb"
+          },
+          {
+            "name": "region",
+            "dataType": "string",
+            "sourceColumn": "region",
+            "summarizeBy": "none",
+            "lineageTag": "8b7802ab-54c3-54b2-ab57-718fa3686d5a"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_state",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"dVXLbttIEPwVwoecgqTn2T3HtQ3Eu44VI3GwhyCHTkiYtCg5IKksvF+f0gydXVEWBAgSODVdXV3V/PLl7I9trRvdVq+q1Zvqz7HXbT2eva7OXMA3vYnkrTWerbcsJho8+bTRvq/GSaemelt9vjv7+rrK97SDVreD1s3Y7m+wUm6I0TCzZU+Rg3F48mFqm2GGDbutfm+1/z/S2IxkEUHpmJjJsLN4snocgNVxmtHjqJuMKLUkgi0ANvjA5iXEedfqkBFUEGKIfIocnSdiOWR30UKO7l6HTIt8htBJDS7aVqepG58BtvQhxOAlxrHnRBIPa1y+WlVX+rPpO8zgcp7FZbfLF5QhWC8uBQmGyZnoTg/hsunbLlPlQtV5Zx2ZBEWsFXcS+O5R89CLKF6sc3vlOaRIWcYTsN2DDjplqn6Gcgw+Ejm2Ubw97PVKhyfd5lIU8/mAIUccdChmTAiL893myBw0ixpZvDcpcAqgugdedc8UxwL/SzebHdS81rHddHnsZIq1ohHnA8BsXSL7IhpOWe8NkNujZ0tSEAd9UnAk6ZDutQ5bnXSdG7TpuUFw9MEKizuy/3UzaF+kL235RJSc5O4w60WB91rrOqvgeObj0Tzhdmsi80ttvNf12Gr9T9P8yMAigKPAltiGIISYnZzwjdbt02GsXYl1Ch6VLWbgxYdFXzcK8aD6NBQtCtsAkhIJefaQzy4h2+7HrmTTzyVgeNgP2Y825O4Wab5p7uEOfcpFTCkiNuKTkGubnM3GWKK6fx+HeW+UgAUT4MGEdJKLSfwxZqX32s9eMLMCFJFoJ/iKnp0cgz7UHaTPAhTVxRlBOFgCYWB24fbbXb37jn/DUx5UEcEl+MAbnKYQjJzO4u1u+6DfsscLv5AsiGH7GgbVtFhtH/UBPGHvjCjrk41wcoRcwBeOF+b71K3XXVFtDhEoOWxOj6WLn/FYgDvddH210jpvMzfz8qiA5HoTLSFHh1XuGsh8Py8JNy8JbwwGGpLBHiNjFohh75tigXIea4uYk5FksAF9Oib2eZp0ONgqJa0MOxtDuIAdjO0PK2WU/t4JNL8ibUx43RBMh37ydj4K4d/NOFXnDRrrM89SLYpAZsbr0ebu/qv29Rc=\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"state\", \"state_code\", \"rural_share_of_adults\", \"region\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"state\", type text}, {\"state_code\", type text}, {\"rural_share_of_adults\", type number}, {\"region\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fct_barriers",
+        "lineageTag": "56dcbb15-68b3-539e-ab5e-f4fe76912153",
+        "columns": [
+          {
+            "name": "sector",
+            "dataType": "string",
+            "sourceColumn": "sector",
+            "summarizeBy": "none",
+            "lineageTag": "d87b9eca-4685-573a-afe8-0dfa850be07c"
+          },
+          {
+            "name": "reason",
+            "dataType": "string",
+            "sourceColumn": "reason",
+            "summarizeBy": "none",
+            "lineageTag": "8a243316-c1b3-5d97-bd81-dd6110d7e35b"
+          },
+          {
+            "name": "barrier_group",
+            "dataType": "string",
+            "sourceColumn": "barrier_group",
+            "summarizeBy": "none",
+            "lineageTag": "1503ed96-0f72-5864-a94c-b6aa18dfbf71"
+          },
+          {
+            "name": "households",
+            "dataType": "double",
+            "sourceColumn": "households",
+            "summarizeBy": "none",
+            "lineageTag": "b97f96b4-cf76-5e33-bf12-585a24fb1dda"
+          },
+          {
+            "name": "sample_n",
+            "dataType": "int64",
+            "sourceColumn": "sample_n",
+            "summarizeBy": "none",
+            "lineageTag": "e6aea352-a15d-58e7-8121-9fb9305d67f1",
+            "formatString": "#,0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fct_barriers",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"nZRNT9wwEIb/isWlF2Q84+9jRSv1UNGqVU+IgzGGtQjJNnYW8e873pYtCd2ycFhp1vE8mXdm3pyfH32bxtAdHbOjD0P/rrLbfrhnK/rVgU0lsVy3z/JNrqFjXa5pDPGBzkAK56VWXDr6g8JcHLMZjfVDZX1KV38YZwNbpzGmvKGjdk6HxilnUXMghgExR7zfhNyFyy6xy6myqyGVVuBdSr+xZR9UGqS6LJeqxX5Z107l/SpUlntS1BMylz1C0YO0ArjRFGs1x338OeX1Xeori0Op1LSBrfLNqj06pYOW7oQ2Eri1FJtF+hm1KOxk5p6FMYUn2jPV8cBOWJnW664V47yQKLYwUHIO+1JXaSy7qN12QmrPEVs4v/w9jZsc096ynTACHdck2uI89VPYpL99CzGmUljqSrqnt6Z9U9EarEcO+Bz4dcwb6vVJSXEam+A49JHoMy3gaVEon5QvRno6dbXFjHpXhr5Qv1ZhvLueugaqNJynHCkQPLdwzBaz+BziLRuuWTfEMMv8lxoE5YE7SbzlRKkVKdYxR1Lyv1ECWM0lEWBL+DFehv4NPpQKDDrkypMi94x1iAsR0FkjubfbbZ8j3upCACcBHldV79V4oAvp62Cs46LRhJjTXjahRi2k4YK22dl58nPXaCHaZTC0qYvLr/YrNgt67qhsuWC95EC0hgbDHX3FlJqnvs2BqBCc5hraZ3EOPMiBKKTygntysFwsyau8I5WWiutH6+wgr/MxogTFHYnB5YwOdqDVklvdHHjxCw==\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"sector\", \"reason\", \"barrier_group\", \"households\", \"sample_n\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"sector\", type text}, {\"reason\", type text}, {\"barrier_group\", type text}, {\"households\", type number}, {\"sample_n\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fct_conditional_national",
+        "lineageTag": "03cd8b2a-f974-5c75-91cd-16acf700fce0",
+        "columns": [
+          {
+            "name": "internet_users",
+            "dataType": "double",
+            "sourceColumn": "internet_users",
+            "summarizeBy": "none",
+            "lineageTag": "b08c71bc-561b-5f1b-bbe9-a9519f58fcf2"
+          },
+          {
+            "name": "online_capable_internet_users",
+            "dataType": "double",
+            "sourceColumn": "online_capable_internet_users",
+            "summarizeBy": "none",
+            "lineageTag": "50b504ac-304e-5872-8a7d-6207a36cb5ee"
+          },
+          {
+            "name": "internet_users_not_online_capable",
+            "dataType": "double",
+            "sourceColumn": "internet_users_not_online_capable",
+            "summarizeBy": "none",
+            "lineageTag": "0a790643-e3ed-5eb9-aa27-74a6a143ec30"
+          },
+          {
+            "name": "conditional_rate",
+            "dataType": "double",
+            "sourceColumn": "conditional_rate",
+            "summarizeBy": "none",
+            "lineageTag": "28af3ed2-66ed-5d05-9c4b-a47c1a752f1a",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "n_internet_users",
+            "dataType": "int64",
+            "sourceColumn": "n_internet_users",
+            "summarizeBy": "none",
+            "lineageTag": "8c0acb52-d5e5-52f1-90e2-b38dcb002096",
+            "formatString": "#,0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fct_conditional_national",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"DchJDQAxDANAKgUQVXY3l7FU5U9j85y5Nz+5Egf7pC13r4aIzbZFeTE4wgg7FcHqgidr3laFUu/9\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"internet_users\", \"online_capable_internet_users\", \"internet_users_not_online_capable\", \"conditional_rate\", \"n_internet_users\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"internet_users\", type number}, {\"online_capable_internet_users\", type number}, {\"internet_users_not_online_capable\", type number}, {\"conditional_rate\", type number}, {\"n_internet_users\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fct_funnel",
+        "lineageTag": "475e2966-b3df-5d34-84d0-9d54f93fbf54",
+        "columns": [
+          {
+            "name": "stage",
+            "dataType": "string",
+            "sourceColumn": "stage",
+            "summarizeBy": "none",
+            "lineageTag": "57878e5f-3cbf-5e7b-ba1b-55e915ca2afb",
+            "sortByColumn": "stage_sort"
+          },
+          {
+            "name": "variable",
+            "dataType": "string",
+            "sourceColumn": "variable",
+            "summarizeBy": "none",
+            "lineageTag": "5cffeb5f-7182-5b9c-a4ba-0d0f5fc63e03"
+          },
+          {
+            "name": "population_crore",
+            "dataType": "double",
+            "sourceColumn": "population_crore",
+            "summarizeBy": "none",
+            "lineageTag": "c1b2a24a-adc9-520a-9c2b-9740932ba211"
+          },
+          {
+            "name": "share_of_adults",
+            "dataType": "double",
+            "sourceColumn": "share_of_adults",
+            "summarizeBy": "none",
+            "lineageTag": "3077f3f7-a754-5c08-b853-0554061fe68d",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "stage_sort",
+            "dataType": "int64",
+            "sourceColumn": "stage_sort",
+            "summarizeBy": "none",
+            "lineageTag": "30ec34b7-6b53-594b-b4f2-eb04c1e128f7",
+            "formatString": "#,0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fct_funnel",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"bdBBi9tADAXgvyJ86oIJMyONNDqWXra3XvYUgpk4AzG7sY3t7O+vMimbtPToZ/Pp+e33zY88wjSXJW8FMsznaSwwLdBPl/m6laVpoVl91+exu66lO5XPoS8WJrdz4qOPTqkFt0vCHik4SVGIE7fgDy3sm9d8gtz3ZV1hm+zAZToOH+XPnW94eakHQnfOp66G9iy6I5aYHDuuNmsM7Lwiq7iELYRqv63FcFgvedn+AfHW9tQ9XlnKtBPPgubEG2uUDyhMnoKm1AJW9fvR+llXA2A7FxhGm2EsW3Xpa4mn2GBiRFGSuxsxenYiHFHR6tKj7rP4qBvvdZ9N3Ckpu+BC3YBVJai6FCwktM3jX223JY9r7jeYxo+h/m6zci17zON795USGRUCibo6AiV1XhSTJ4no7fD/2c8hw9uvn9WV7joPZs/ZvrqbRDEIuRtwMxl9jBI5Oia1ZeVw+A0=\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"stage\", \"variable\", \"population_crore\", \"share_of_adults\", \"stage_sort\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"stage\", type text}, {\"variable\", type text}, {\"population_crore\", type number}, {\"share_of_adults\", type number}, {\"stage_sort\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fct_npci_national",
+        "lineageTag": "2ecad727-2909-5d78-813d-7aaa9c502f2f",
+        "columns": [
+          {
+            "name": "period",
+            "dataType": "string",
+            "sourceColumn": "period",
+            "summarizeBy": "none",
+            "lineageTag": "efd48b84-5e2a-5d02-9128-ec9d00fd0a96"
+          },
+          {
+            "name": "total_volume_mn",
+            "dataType": "double",
+            "sourceColumn": "total_volume_mn",
+            "summarizeBy": "none",
+            "lineageTag": "b81c63a0-2d2f-59e3-a8a2-eb43d60165e0"
+          },
+          {
+            "name": "classified_volume_mn",
+            "dataType": "double",
+            "sourceColumn": "classified_volume_mn",
+            "summarizeBy": "none",
+            "lineageTag": "726f3d20-8af5-5a63-9911-13109449780f"
+          },
+          {
+            "name": "unclassified_volume_mn",
+            "dataType": "double",
+            "sourceColumn": "unclassified_volume_mn",
+            "summarizeBy": "none",
+            "lineageTag": "e0b88700-de99-5fb7-815d-a215f553b28c"
+          },
+          {
+            "name": "unclassified_share_volume",
+            "dataType": "double",
+            "sourceColumn": "unclassified_share_volume",
+            "summarizeBy": "none",
+            "lineageTag": "3e2ebe90-9e56-59f6-9490-b468a1e064fb",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "national_volume_per_survey_capable_person",
+            "dataType": "double",
+            "sourceColumn": "national_volume_per_survey_capable_person",
+            "summarizeBy": "none",
+            "lineageTag": "e0771765-0c8b-5f9c-9aaf-49c2f5db8298"
+          },
+          {
+            "name": "classified_volume_per_survey_capable_person",
+            "dataType": "double",
+            "sourceColumn": "classified_volume_per_survey_capable_person",
+            "summarizeBy": "none",
+            "lineageTag": "b428e36d-ca9e-5b56-bb89-aee273c5f24f"
+          },
+          {
+            "name": "benchmark_interpretation",
+            "dataType": "string",
+            "sourceColumn": "benchmark_interpretation",
+            "summarizeBy": "none",
+            "lineageTag": "92dd57d4-466c-573d-9a3b-284649869a35"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fct_npci_national",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"JYq7DgIhEAB/ZUPNEZbHAqWtiV9wuQJ1vdhABE7j30tiNcnMrKs457JccgOjjRcSPDptVZBgMSIpIgmYfAxKOwla2YjaWRtDMsGaaGZFr8gTEmGiFEOYX0DlI6GbmyON04jTvjfe82BoeTxrl1DqgHrt3N58h2MSHo1fB5fbF2qDwp/lb2vjW+6ji237AQ==\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"period\", \"total_volume_mn\", \"classified_volume_mn\", \"unclassified_volume_mn\", \"unclassified_share_volume\", \"national_volume_per_survey_capable_person\", \"classified_volume_per_survey_capable_person\", \"benchmark_interpretation\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"period\", type text}, {\"total_volume_mn\", type number}, {\"classified_volume_mn\", type number}, {\"unclassified_volume_mn\", type number}, {\"unclassified_share_volume\", type number}, {\"national_volume_per_survey_capable_person\", type number}, {\"classified_volume_per_survey_capable_person\", type number}, {\"benchmark_interpretation\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fct_segment",
+        "lineageTag": "0e66e157-097d-50bc-a7f6-b6bb73e8d8dd",
+        "columns": [
+          {
+            "name": "state",
+            "dataType": "string",
+            "sourceColumn": "state",
+            "summarizeBy": "none",
+            "lineageTag": "7aa729a4-0698-5783-af66-c9aea61345b8"
+          },
+          {
+            "name": "sector",
+            "dataType": "string",
+            "sourceColumn": "sector",
+            "summarizeBy": "none",
+            "lineageTag": "aeb54ad7-6749-5329-91bb-f9f45d38bd99"
+          },
+          {
+            "name": "age_band",
+            "dataType": "string",
+            "sourceColumn": "age_band",
+            "summarizeBy": "none",
+            "lineageTag": "7d69bbfa-29e0-5fd4-b5cc-283a69346b04"
+          },
+          {
+            "name": "sex",
+            "dataType": "string",
+            "sourceColumn": "sex",
+            "summarizeBy": "none",
+            "lineageTag": "86d1d11a-5e41-517a-be8d-93e695c137f9"
+          },
+          {
+            "name": "adults",
+            "dataType": "double",
+            "sourceColumn": "adults",
+            "summarizeBy": "none",
+            "lineageTag": "f26e40a4-3736-56c4-8b18-d5a5bb6ed5cf"
+          },
+          {
+            "name": "capable_adults",
+            "dataType": "double",
+            "sourceColumn": "capable_adults",
+            "summarizeBy": "none",
+            "lineageTag": "1ca7de96-56ca-56f8-87bb-5463455deffc"
+          },
+          {
+            "name": "excluded_adults",
+            "dataType": "double",
+            "sourceColumn": "excluded_adults",
+            "summarizeBy": "none",
+            "lineageTag": "fa0c5478-7b81-5994-afbd-6e4fc213773e"
+          },
+          {
+            "name": "sample_n",
+            "dataType": "int64",
+            "sourceColumn": "sample_n",
+            "summarizeBy": "none",
+            "lineageTag": "36ea9727-4552-582b-84f5-abc696cb05c4",
+            "formatString": "#,0"
+          },
+          {
+            "name": "unreliable",
+            "dataType": "boolean",
+            "sourceColumn": "unreliable",
+            "summarizeBy": "none",
+            "lineageTag": "06da4032-b3c3-598b-a733-abf67b4ac4a1"
+          },
+          {
+            "name": "uncertainty_status",
+            "dataType": "string",
+            "sourceColumn": "uncertainty_status",
+            "summarizeBy": "none",
+            "lineageTag": "f2000e66-b2be-59f0-bd33-b61a58ffd35f"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fct_segment",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"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\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"state\", \"sector\", \"age_band\", \"sex\", \"adults\", \"capable_adults\", \"excluded_adults\", \"sample_n\", \"unreliable\", \"uncertainty_status\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"state\", type text}, {\"sector\", type text}, {\"age_band\", type text}, {\"sex\", type text}, {\"adults\", type number}, {\"capable_adults\", type number}, {\"excluded_adults\", type number}, {\"sample_n\", Int64.Type}, {\"unreliable\", type logical}, {\"uncertainty_status\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fct_sensitivity",
+        "lineageTag": "a2370eea-8428-5146-adfc-3a1509e317d4",
+        "columns": [
+          {
+            "name": "allocation_rule",
+            "dataType": "string",
+            "sourceColumn": "allocation_rule",
+            "summarizeBy": "none",
+            "lineageTag": "f044aad3-3dc5-5455-b7ae-fd5845b8157f"
+          },
+          {
+            "name": "correlation_with_capability",
+            "dataType": "double",
+            "sourceColumn": "correlation_with_capability",
+            "summarizeBy": "none",
+            "lineageTag": "92cffcbd-d6c1-5150-948e-77c53d3fa43b"
+          },
+          {
+            "name": "spearman_vs_capability",
+            "dataType": "double",
+            "sourceColumn": "spearman_vs_capability",
+            "summarizeBy": "none",
+            "lineageTag": "02beea6a-5a1e-52f2-b409-600392806f7e"
+          },
+          {
+            "name": "rank_agreement_with_excluded",
+            "dataType": "double",
+            "sourceColumn": "rank_agreement_with_excluded",
+            "summarizeBy": "none",
+            "lineageTag": "39cf7e60-4e19-5271-a0e4-b51637b97181"
+          },
+          {
+            "name": "highest_usage_state",
+            "dataType": "string",
+            "sourceColumn": "highest_usage_state",
+            "summarizeBy": "none",
+            "lineageTag": "5508342b-44ce-5911-b2b9-7292f3c60c4c"
+          },
+          {
+            "name": "interpretation",
+            "dataType": "string",
+            "sourceColumn": "interpretation",
+            "summarizeBy": "none",
+            "lineageTag": "ffc63996-7a99-5144-a392-a48c1cd75b1f"
+          },
+          {
+            "name": "invariant_by_construction",
+            "dataType": "boolean",
+            "sourceColumn": "invariant_by_construction",
+            "summarizeBy": "none",
+            "lineageTag": "357f4f79-a054-5171-af71-e6686dd8c108"
+          },
+          {
+            "name": "uses_capability_in_allocation",
+            "dataType": "boolean",
+            "sourceColumn": "uses_capability_in_allocation",
+            "summarizeBy": "none",
+            "lineageTag": "45a78fd9-125f-5698-b11e-20604b47b73d"
+          },
+          {
+            "name": "state_count",
+            "dataType": "int64",
+            "sourceColumn": "state_count",
+            "summarizeBy": "none",
+            "lineageTag": "e97c695c-f189-5c5d-8bc8-76eef58aa8b3",
+            "formatString": "#,0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fct_sensitivity",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"zdFda8MgFAbgv3LIdSh+xC922YvtP4QyThObCDaGaKD999Vs7cbYZWEDeYUX1Idj21b20vm1t31VA9lJLoVpKNOiYYorWTpF6fela6A7UkP1GjCfqd6uc0ijTa5DD+h96DC5ML3AFBLgBDYmd8ZkIZzg7GJ00wAxlaLHVG5Iy2prOKGPeePyUENbzUuYw1LuQf8bTP0V7Hh9x371Kf6rcWVVhzMevd1YilNijOQZoLUgrHSayIYLck9ROqMpI0Y9MvP2I069G3AZn4L9ZH6Yv7ADzhtU5HdZoWrNOJPb/AQXsjHmnttPG6GYouKRTxznT+HhBg==\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"allocation_rule\", \"correlation_with_capability\", \"spearman_vs_capability\", \"rank_agreement_with_excluded\", \"highest_usage_state\", \"interpretation\", \"invariant_by_construction\", \"uses_capability_in_allocation\", \"state_count\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"allocation_rule\", type text}, {\"correlation_with_capability\", type number}, {\"spearman_vs_capability\", type number}, {\"rank_agreement_with_excluded\", type number}, {\"highest_usage_state\", type text}, {\"interpretation\", type text}, {\"invariant_by_construction\", type logical}, {\"uses_capability_in_allocation\", type logical}, {\"state_count\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fct_source_validation",
+        "lineageTag": "e713584f-356f-5e7a-b838-504af839f407",
+        "columns": [
+          {
+            "name": "state_code",
+            "dataType": "string",
+            "sourceColumn": "state_code",
+            "summarizeBy": "none",
+            "lineageTag": "9269e5dc-d618-51c7-b355-d384c6d990ee"
+          },
+          {
+            "name": "official_pct",
+            "dataType": "double",
+            "sourceColumn": "official_pct",
+            "summarizeBy": "none",
+            "lineageTag": "80b84d0f-9947-525a-bcdc-cff4c4df299c"
+          },
+          {
+            "name": "source_url",
+            "dataType": "string",
+            "sourceColumn": "source_url",
+            "summarizeBy": "none",
+            "lineageTag": "71598e93-34e3-5f1b-a4c5-9a302dfcf9c6"
+          },
+          {
+            "name": "source_table",
+            "dataType": "string",
+            "sourceColumn": "source_table",
+            "summarizeBy": "none",
+            "lineageTag": "d3f1b83c-327f-5fe4-8ee5-618cecac8ab6"
+          },
+          {
+            "name": "computed_pct",
+            "dataType": "double",
+            "sourceColumn": "computed_pct",
+            "summarizeBy": "none",
+            "lineageTag": "01e21f10-72ff-5eae-8ec4-b4dda948a4e3"
+          },
+          {
+            "name": "difference_pp",
+            "dataType": "double",
+            "sourceColumn": "difference_pp",
+            "summarizeBy": "none",
+            "lineageTag": "07819cfa-f75c-5026-8504-d12cc4eb87c9"
+          },
+          {
+            "name": "matches_published_precision",
+            "dataType": "boolean",
+            "sourceColumn": "matches_published_precision",
+            "summarizeBy": "none",
+            "lineageTag": "8c6cc143-5c7c-5c45-a610-4599c03f66f0"
+          },
+          {
+            "name": "review_status",
+            "dataType": "string",
+            "sourceColumn": "review_status",
+            "summarizeBy": "none",
+            "lineageTag": "8b870cb0-e6e7-5084-b1d6-b3ffa5a01687"
+          },
+          {
+            "name": "state",
+            "dataType": "string",
+            "sourceColumn": "state",
+            "summarizeBy": "none",
+            "lineageTag": "f5414bf0-76e3-52d7-aa32-6bf67ace944b"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fct_source_validation",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"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\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"state_code\", \"official_pct\", \"source_url\", \"source_table\", \"computed_pct\", \"difference_pp\", \"matches_published_precision\", \"review_status\", \"state\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"state_code\", type text}, {\"official_pct\", type number}, {\"source_url\", type text}, {\"source_table\", type text}, {\"computed_pct\", type number}, {\"difference_pp\", type number}, {\"matches_published_precision\", type logical}, {\"review_status\", type text}, {\"state\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fct_state",
+        "lineageTag": "a58e78df-369c-5728-8d42-048bd477a14f",
+        "columns": [
+          {
+            "name": "state",
+            "dataType": "string",
+            "sourceColumn": "state",
+            "summarizeBy": "none",
+            "lineageTag": "84b4b059-d65e-5ec9-b5d9-01437a83a1b3"
+          },
+          {
+            "name": "adults",
+            "dataType": "double",
+            "sourceColumn": "adults",
+            "summarizeBy": "none",
+            "lineageTag": "80698381-2274-5b12-be41-f7febafd2e87"
+          },
+          {
+            "name": "capable_adults",
+            "dataType": "double",
+            "sourceColumn": "capable_adults",
+            "summarizeBy": "none",
+            "lineageTag": "25b9d1c2-f7ce-5dd4-8796-339627a84bbf"
+          },
+          {
+            "name": "excluded_adults",
+            "dataType": "double",
+            "sourceColumn": "excluded_adults",
+            "summarizeBy": "none",
+            "lineageTag": "6b8b7d8d-dd8b-535c-b6f9-ad435ae42246"
+          },
+          {
+            "name": "sample_n",
+            "dataType": "int64",
+            "sourceColumn": "sample_n",
+            "summarizeBy": "none",
+            "lineageTag": "4e807dcc-df9a-5981-84b3-7e613656262e",
+            "formatString": "#,0"
+          },
+          {
+            "name": "female_rate",
+            "dataType": "double",
+            "sourceColumn": "female_rate",
+            "summarizeBy": "none",
+            "lineageTag": "97c03c65-63a5-5cad-b94f-f3422619c547",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "male_rate",
+            "dataType": "double",
+            "sourceColumn": "male_rate",
+            "summarizeBy": "none",
+            "lineageTag": "742f8e69-265d-5c0a-81d7-f8e8eb5c7fb2",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "gender_gap_pp",
+            "dataType": "double",
+            "sourceColumn": "gender_gap_pp",
+            "summarizeBy": "none",
+            "lineageTag": "e9d629fa-bbe1-50c5-a840-9ec66e559c60"
+          },
+          {
+            "name": "n_fsu",
+            "dataType": "int64",
+            "sourceColumn": "n_fsu",
+            "summarizeBy": "none",
+            "lineageTag": "15f59c30-7ea3-578d-9f79-000ec98d2b65",
+            "formatString": "#,0"
+          },
+          {
+            "name": "review_status",
+            "dataType": "string",
+            "sourceColumn": "review_status",
+            "summarizeBy": "none",
+            "lineageTag": "a5a9ed7c-04ac-5c6f-a547-5708901550c1"
+          },
+          {
+            "name": "matches_published_precision",
+            "dataType": "boolean",
+            "sourceColumn": "matches_published_precision",
+            "summarizeBy": "none",
+            "lineageTag": "03049b7a-5545-5ca9-ae86-1bd739141fa9"
+          },
+          {
+            "name": "uncertainty_status",
+            "dataType": "string",
+            "sourceColumn": "uncertainty_status",
+            "summarizeBy": "none",
+            "lineageTag": "ac263866-1df1-5b8d-909f-1127cae436e2"
+          },
+          {
+            "name": "txn_volume_mn",
+            "dataType": "double",
+            "sourceColumn": "txn_volume_mn",
+            "summarizeBy": "none",
+            "lineageTag": "23511644-07f0-5881-9ddf-c15a9e4873ef"
+          },
+          {
+            "name": "txn_value_cr",
+            "dataType": "double",
+            "sourceColumn": "txn_value_cr",
+            "summarizeBy": "none",
+            "lineageTag": "06b62221-888b-5f87-a021-1ae0b2dec7f5"
+          },
+          {
+            "name": "txn_per_adult",
+            "dataType": "double",
+            "sourceColumn": "txn_per_adult",
+            "summarizeBy": "none",
+            "lineageTag": "9c601e64-a077-5a2e-ac83-28a8f966ed91"
+          },
+          {
+            "name": "txn_per_capable_adult",
+            "dataType": "double",
+            "sourceColumn": "txn_per_capable_adult",
+            "summarizeBy": "none",
+            "lineageTag": "496fa107-0bfb-5610-9212-b43f7a2c2e0e"
+          },
+          {
+            "name": "fitted_classified_txn_per_adult",
+            "dataType": "double",
+            "sourceColumn": "fitted_classified_txn_per_adult",
+            "summarizeBy": "none",
+            "lineageTag": "591196eb-4606-5567-a6bc-39dfdf49740f"
+          },
+          {
+            "name": "residual",
+            "dataType": "double",
+            "sourceColumn": "residual",
+            "summarizeBy": "none",
+            "lineageTag": "b91a22ac-f808-57e8-99ef-28f48142dbe0"
+          },
+          {
+            "name": "included_in_fit",
+            "dataType": "boolean",
+            "sourceColumn": "included_in_fit",
+            "summarizeBy": "none",
+            "lineageTag": "dc099d3e-4921-56f1-a2e4-1440edcd0b06"
+          },
+          {
+            "name": "transaction_scope",
+            "dataType": "string",
+            "sourceColumn": "transaction_scope",
+            "summarizeBy": "none",
+            "lineageTag": "d5fc1ecd-0437-5847-8bd8-fc01ebfa792c"
+          },
+          {
+            "name": "comparison_label",
+            "dataType": "string",
+            "sourceColumn": "comparison_label",
+            "summarizeBy": "none",
+            "lineageTag": "0a18d52f-ee09-529b-97df-44cf9ee4e0fe"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fct_state",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"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\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"state\", \"adults\", \"capable_adults\", \"excluded_adults\", \"sample_n\", \"female_rate\", \"male_rate\", \"gender_gap_pp\", \"n_fsu\", \"review_status\", \"matches_published_precision\", \"uncertainty_status\", \"txn_volume_mn\", \"txn_value_cr\", \"txn_per_adult\", \"txn_per_capable_adult\", \"fitted_classified_txn_per_adult\", \"residual\", \"included_in_fit\", \"transaction_scope\", \"comparison_label\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"state\", type text}, {\"adults\", type number}, {\"capable_adults\", type number}, {\"excluded_adults\", type number}, {\"sample_n\", Int64.Type}, {\"female_rate\", type number}, {\"male_rate\", type number}, {\"gender_gap_pp\", type number}, {\"n_fsu\", Int64.Type}, {\"review_status\", type text}, {\"matches_published_precision\", type logical}, {\"uncertainty_status\", type text}, {\"txn_volume_mn\", type number}, {\"txn_value_cr\", type number}, {\"txn_per_adult\", type number}, {\"txn_per_capable_adult\", type number}, {\"fitted_classified_txn_per_adult\", type number}, {\"residual\", type number}, {\"included_in_fit\", type logical}, {\"transaction_scope\", type text}, {\"comparison_label\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "fct_unclassified",
+        "lineageTag": "9cd3b82e-5cbf-55ce-9977-83fe8d704051",
+        "columns": [
+          {
+            "name": "month",
+            "dataType": "string",
+            "sourceColumn": "month",
+            "summarizeBy": "none",
+            "lineageTag": "b5b8cd5a-63de-5cd2-9c7d-96359771ab8d",
+            "sortByColumn": "month_sort"
+          },
+          {
+            "name": "total_volume_mn",
+            "dataType": "double",
+            "sourceColumn": "total_volume_mn",
+            "summarizeBy": "none",
+            "lineageTag": "49057fbf-0ec0-5112-ba89-2a94df4361fc"
+          },
+          {
+            "name": "unclassified_volume_mn",
+            "dataType": "double",
+            "sourceColumn": "unclassified_volume_mn",
+            "summarizeBy": "none",
+            "lineageTag": "04101e23-95e0-5e8d-89bd-1c9bd1341695"
+          },
+          {
+            "name": "unclassified_share_volume",
+            "dataType": "double",
+            "sourceColumn": "unclassified_share_volume",
+            "summarizeBy": "none",
+            "lineageTag": "ee40a2d5-9075-519d-8a36-4ab85de82740",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "unclassified_share_value",
+            "dataType": "double",
+            "sourceColumn": "unclassified_share_value",
+            "summarizeBy": "none",
+            "lineageTag": "25f489a8-219f-525f-a0ad-b2f36c8437a8",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "month_sort",
+            "dataType": "int64",
+            "sourceColumn": "month_sort",
+            "summarizeBy": "none",
+            "lineageTag": "0e8f0dbf-0279-505e-8ad4-615275b01c9c",
+            "formatString": "#,0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fct_unclassified",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"LY47CsNAEEOvsrgehvl/LpAikBMYFw6kTZH7F9lsjBohpIf2fbuf7w0GR3cgwfAqRg4YhGpBKkTpylxaK5Mwc2uqME/OuTxg7Nvt9VwUpkBuGGFM2P9JF5lZljvb1MrSJaZP6wiBIQvyOD8/SCkx+uyltGFfDG938RS7jqRmhwe5WDUpDD2OLw==\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"month\", \"total_volume_mn\", \"unclassified_volume_mn\", \"unclassified_share_volume\", \"unclassified_share_value\", \"month_sort\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"month\", type text}, {\"total_volume_mn\", type number}, {\"unclassified_volume_mn\", type number}, {\"unclassified_share_volume\", type number}, {\"unclassified_share_value\", type number}, {\"month_sort\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "scenario",
+        "lineageTag": "f2c5d135-e3a3-5218-a1c4-bc1ce31b9cfa",
+        "columns": [
+          {
+            "name": "assumed_percent",
+            "dataType": "int64",
+            "sourceColumn": "assumed_percent",
+            "summarizeBy": "none",
+            "lineageTag": "a6b9267d-eb30-5a54-a99d-b1ba7c6f6168",
+            "formatString": "#,0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "scenario",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"LdLJkQQhDABBV8aAfQwSh7Clo/13Y4JkP/Uig0M8z/f9+zztJE7ypJ+Mk3myTupkW3wJ06BGNaxxDWxkQxsbbNz92GCDDTbYYIMNNtlk8x6WTTbZZJNNNtnOdraz/d6U7WxnO9vZzg52sIMd7LjPxA52sIMd7GQnO9nJTnbeN2YnO9nJLnaxi13sYhe77oDYxS622GKLLbbYYoutO1222M1udrOb3exmN7vZfb/G/9/4vu8P\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"assumed_percent\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"assumed_percent\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "_Measures",
+        "lineageTag": "81c1c005-ea9c-5633-b70b-6e7b0252c7e1",
+        "columns": [
+          {
+            "name": "placeholder",
+            "dataType": "double",
+            "sourceColumn": "placeholder",
+            "summarizeBy": "none",
+            "lineageTag": "b446ed34-bb92-5f1a-b256-44f2626174b8",
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "_Measures",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Rows = Json.Document(Binary.Decompress(Binary.FromText(\"i4420DOIjQUA\", BinaryEncoding.Base64), Compression.Deflate)),",
+                "    Data = Table.FromRows(Rows, {\"placeholder\"}),",
+                "    Typed = Table.TransformColumnTypes(Data, {{\"placeholder\", type number}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Adults",
+            "expression": "SUM(fct_segment[adults])",
+            "lineageTag": "05ccab3b-bfc3-53f5-bd8c-bffeee843a90",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Capable Adults",
+            "expression": "SUM(fct_segment[capable_adults])",
+            "lineageTag": "20c91090-fdc3-5bed-91db-006461fee487",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Excluded Adults",
+            "expression": "[Adults] - [Capable Adults]",
+            "lineageTag": "a9fab62b-a976-57d5-bc7b-92e9b34fcb51",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Capability Rate",
+            "expression": "DIVIDE([Capable Adults], [Adults])",
+            "lineageTag": "38543df9-5371-56c8-9841-0db488f6f3ab",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Sample Size",
+            "expression": "SUM(fct_segment[sample_n])",
+            "lineageTag": "b786cf29-1303-5db4-941a-2b750600a71d",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Displayed Capability Rate",
+            "expression": "IF([Sample Size] >= 30, [Capability Rate], BLANK())",
+            "lineageTag": "7db39820-c2b2-5d39-8d61-406142bdf1af",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Adults (crore)",
+            "expression": "DIVIDE([Adults], 10000000)",
+            "lineageTag": "414c6975-f8d9-599b-9bca-2cb035fc17dc",
+            "formatString": "0.0"
+          },
+          {
+            "name": "Excluded (crore)",
+            "expression": "DIVIDE([Excluded Adults], 10000000)",
+            "lineageTag": "0dc55d8d-1e04-58d8-9ba4-cf84046363dc",
+            "formatString": "0.0"
+          },
+          {
+            "name": "Internet users unable to bank online (crore)",
+            "expression": "DIVIDE(SUM(fct_conditional_national[internet_users_not_online_capable]),10000000)",
+            "lineageTag": "fc9da80a-b291-5769-bd31-c067aaf3b33a",
+            "formatString": "0.0"
+          },
+          {
+            "name": "Indicator Share",
+            "expression": "SELECTEDVALUE(fct_funnel[share_of_adults])",
+            "lineageTag": "fe6c7450-024c-5c55-b6e4-7794fac076f0",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Households without internet",
+            "expression": "SUM(fct_barriers[households])",
+            "lineageTag": "3b6fd3f8-c01f-5e8a-a42c-81adc33c9679",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Barrier Share",
+            "expression": "DIVIDE([Households without internet], CALCULATE([Households without internet], REMOVEFILTERS(fct_barriers[reason]), REMOVEFILTERS(fct_barriers[barrier_group])))",
+            "lineageTag": "ffcba756-f02d-5bed-9032-4199e6ba0553",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "National Transactions (bn)",
+            "expression": "SUM(fct_npci_national[total_volume_mn])/1000",
+            "lineageTag": "a6a719f9-1745-5ebc-9892-764240b0eda5",
+            "formatString": "0.00"
+          },
+          {
+            "name": "Classified Transactions (bn)",
+            "expression": "SUM(fct_npci_national[classified_volume_mn])/1000",
+            "lineageTag": "0003fbb7-9125-559c-867d-cd281a68573a",
+            "formatString": "0.00"
+          },
+          {
+            "name": "Unclassified Transactions (bn)",
+            "expression": "SUM(fct_npci_national[unclassified_volume_mn])/1000",
+            "lineageTag": "e7212f59-08eb-5837-946e-089fb1661f3f",
+            "formatString": "0.00"
+          },
+          {
+            "name": "Unclassified Share",
+            "expression": "DIVIDE(SUM(fct_npci_national[unclassified_volume_mn]),SUM(fct_npci_national[total_volume_mn]))",
+            "lineageTag": "a48d64a7-8926-5fb4-af7f-a27afc6cbd7d",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "State Capability Rate",
+            "expression": "DIVIDE(SUM(fct_state[capable_adults]),SUM(fct_state[adults]))",
+            "lineageTag": "661a31d7-2e14-5a77-b55b-a21ca78781c2",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Classified Transactions per Resident 15+",
+            "expression": "DIVIDE(SUM(fct_state[txn_volume_mn])*1000000,SUM(fct_state[adults]))",
+            "lineageTag": "1e8c7b59-f513-55ef-a7e0-98b9a8d4f9f5",
+            "formatString": "0.0"
+          },
+          {
+            "name": "State Review",
+            "expression": "IF(HASONEVALUE(dim_state[state]), SELECTEDVALUE(fct_state[review_status]), \"Select a state to see its source check\")",
+            "lineageTag": "b4fad2b1-e98f-51cd-9965-dac7fcf79250"
+          },
+          {
+            "name": "Source Check",
+            "expression": "IF(HASONEVALUE(dim_state[state]), SELECTEDVALUE(fct_state[review_status]), \"See Methods for source checks\")",
+            "lineageTag": "1890f89e-30d2-5dd9-bf64-a7abd81823f0"
+          },
+          {
+            "name": "Assumed Share",
+            "expression": "DIVIDE(SELECTEDVALUE(scenario[assumed_percent],10),100)",
+            "lineageTag": "fb4ac675-3011-5642-a330-26773cd63483",
+            "formatString": "0%"
+          },
+          {
+            "name": "Scenario Baseline",
+            "expression": "IF([Sample Size] >= 30, [Excluded Adults], BLANK())",
+            "lineageTag": "12a6ab0f-68e6-5fb4-bd91-1f4a49d1fb54",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Newly Capable (what-if)",
+            "expression": "[Scenario Baseline] * [Assumed Share]",
+            "lineageTag": "4c008cf0-7f2f-5a12-aead-987e141aeb58",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Newly Capable (crore)",
+            "expression": "DIVIDE([Newly Capable (what-if)],10000000)",
+            "lineageTag": "454d96f5-7a09-5bd9-839c-cf1aec33f5a1",
+            "formatString": "0.00"
+          },
+          {
+            "name": "Monthly Unclassified Share",
+            "expression": "DIVIDE(SUM(fct_unclassified[unclassified_volume_mn]),SUM(fct_unclassified[total_volume_mn]))",
+            "lineageTag": "ef9ffde9-e583-5d34-b484-a31da3fb30b4",
+            "formatString": "0.0%"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "ba621604-beae-579b-93bf-1cada8f374a4",
+        "fromTable": "fct_segment",
+        "fromColumn": "state",
+        "toTable": "dim_state",
+        "toColumn": "state",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "fac3299b-aae1-5609-b74a-10521b2cee1e",
+        "fromTable": "fct_state",
+        "fromColumn": "state",
+        "toTable": "dim_state",
+        "toColumn": "state",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "187d1f88-fc49-5785-9497-36c39e2de313",
+        "fromTable": "fct_segment",
+        "fromColumn": "sector",
+        "toTable": "dim_sector",
+        "toColumn": "sector",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "3bbf1921-7bee-5f61-b625-840f6de6af44",
+        "fromTable": "fct_barriers",
+        "fromColumn": "sector",
+        "toTable": "dim_sector",
+        "toColumn": "sector",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "2dcb5f14-df0e-5de7-8ed9-71cb05a31284",
+        "fromTable": "fct_segment",
+        "fromColumn": "age_band",
+        "toTable": "dim_age_band",
+        "toColumn": "age_band",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "e79b2626-caa6-515f-821d-d57a64c27c09",
+        "fromTable": "fct_segment",
+        "fromColumn": "sex",
+        "toTable": "dim_sex",
+        "toColumn": "sex",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      }
+    ],
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"dim_age_band\", \"dim_sector\", \"dim_sex\", \"dim_state\", \"fct_barriers\", \"fct_conditional_national\", \"fct_funnel\", \"fct_npci_national\", \"fct_segment\", \"fct_sensitivity\", \"fct_source_validation\", \"fct_state\", \"fct_unclassified\", \"scenario\", \"_Measures\"]"
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    }
+  }
+}

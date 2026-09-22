@@ -1,224 +1,88 @@
-# Power BI build sheet
+# Power BI migration and rebuild
 
-Everything needed to assemble the dashboard in Power BI Desktop. The data is
-already shaped for it — run `python src/build_powerbi_export.py` and load the
-ten CSVs in `data/powerbi/`.
+The previous PBIX and screenshot in `docs/legacy/` are superseded. They contain
+old text, measures and cached data. **Do not present them as the corrected
+analysis.** The corrected five-page report is now available at
+`powerbi/UPI Capability Gap.pbix`, with an editable project in the same folder.
+It was loaded, refreshed, visually checked and saved in Power BI Desktop
+2.157.1354.0. All five pages rendered; national headlines, demographic filtering
+and the 0%/10%/100% population what-if results were checked.
 
-The `.pbix` file itself has to be built in Desktop; it is a proprietary binary
-that cannot be generated from a script.
+Run `python src/build_powerbi_project.py` after generating the CSV exports to
+rebuild the PBIP/PBIR definitions. Refresh in Desktop, verify the report and save
+the PBIX. The project embeds a portable aggregate snapshot; Refresh does not
+download new survey or NPCI data. Regeneration replaces generated definitions;
+preserve manual design edits separately. See `powerbi/START_HERE.md`.
 
----
+## Load and model
 
-## 1. Load
+Run `python src/build_powerbi_export.py`. Load the CSVs in `data/powerbi/`.
+Relate `dim_state[state]` to both state and segment facts, `dim_sector[sector]`
+to segment and barrier facts, `dim_age_band[age_band]` to segment facts and
+`dim_sex[sex]` to segment facts. Use single-direction, one-to-many relationships.
+Keep national indicators, conditional-national, source-validation, national
+NPCI, allocation assumptions and unclassified tables disconnected.
 
-**Home → Get data → Text/CSV**, and load all ten files from `data/powerbi/`.
-Or **Get data → Folder** and point at `data/powerbi` to bring them in together.
+Keep demographic slicers on the survey page. They must not be applied to a
+state transaction chart: state transaction totals cannot be attributed to the
+selected demographic group. Keep all three recorded sex categories in the
+model; suppress small displayed cells without removing their contribution to
+national totals.
 
-In Power Query, check that these are typed as **Decimal Number**, not Text —
-Power BI occasionally guesses wrong on columns with large values:
-
-`adults`, `capable_adults`, `excluded_adults`, `txn_volume_mn`,
-`txn_per_adult`, `residual`, `households`
-
----
-
-## 2. Model
-
-Switch to **Model view** and create these relationships. All are
-one-to-many, single direction, from the dimension to the fact.
-
-| From | To | Cardinality |
-|---|---|---|
-| `dim_state[state]` | `fct_segment[state]` | 1 → * |
-| `dim_state[state]` | `fct_state[state]` | 1 → * |
-| `dim_sector[sector]` | `fct_segment[sector]` | 1 → * |
-| `dim_sector[sector]` | `fct_barriers[sector]` | 1 → * |
-| `dim_age_band[age_band]` | `fct_segment[age_band]` | 1 → * |
-| `dim_sex[sex]` | `fct_segment[sex]` | 1 → * |
-
-`fct_funnel`, `fct_sensitivity` and `fct_unclassified` stay disconnected. They
-are national-level tables with no dimension to slice by, and wiring them into
-the model would only create ambiguity.
-
-**Sort columns.** Select `dim_age_band[age_band]` → **Column tools → Sort by
-column → age_sort**. Repeat for `dim_sector[sector]` by `sector_sort`,
-`dim_sex[sex]` by `sex_sort`, and `fct_funnel[stage]` by `stage_sort`.
-Without this, every axis sorts alphabetically and the funnel reads in the
-wrong order.
-
----
-
-## 3. Measures
-
-Create these in a new table (**Home → Enter data**, name it `_Measures`, load
-an empty table, then add measures to it). Keeping measures in one place stops
-them scattering across fact tables.
-
-### Core
+## Measures
 
 ```dax
-Adults = SUM ( fct_segment[adults] )
+Adults = SUM(fct_segment[adults])
+Capable Adults = SUM(fct_segment[capable_adults])
+Excluded Adults = [Adults] - [Capable Adults]
+Capability Rate = DIVIDE([Capable Adults], [Adults])
+Sample Size = SUM(fct_segment[sample_n])
+Displayed Capability Rate = IF([Sample Size] >= 30, [Capability Rate], BLANK())
 
-Capable Adults = SUM ( fct_segment[capable_adults] )
+Classified Transactions (mn) = SUM(fct_state[txn_volume_mn])
+Classified Transactions per Resident 15+ =
+DIVIDE([Classified Transactions (mn)] * 1000000, SUM(fct_state[adults]))
 
-Excluded Adults = SUM ( fct_segment[excluded_adults] )
-
-Capability Rate =
-DIVIDE ( [Capable Adults], [Adults] )
+Selected State Residual =
+IF(HASONEVALUE(dim_state[state]), SELECTEDVALUE(fct_state[residual]), BLANK())
 ```
 
-**Why `Capability Rate` is a measure and not a stored column.** The export
-deliberately omits rate columns. If a rate were stored per row and then
-averaged, every state would count equally regardless of population — Lakshadweep
-would pull the national figure as hard as Uttar Pradesh. Recomputing from the
-summed numerator and denominator weights correctly at every level of
-aggregation.
+The sample-size guard is only a display rule. Do not name it a valid-ranking
+measure. Do not average rates across segments or sum residuals across states.
+`review_status`, `uncertainty_status`, `included_in_fit` and `transaction_scope`
+must remain visible in appropriate tables/tooltips. HP remains provisional.
 
-### Gap framing
+## Pages
 
-```dax
-Excluded (crore) = DIVIDE ( [Excluded Adults], 10000000 )
+1. **Survey findings:** dynamic survey totals, independent prevalence bars and
+   household internet barriers. The online-but-unable figure must come from
+   `fct_conditional_national[internet_users_not_online_capable]`; do not type a
+   static headline or subtract unrelated marginal totals. Explain that the
+   indicator bars are not sequential and internet barriers are not UPI causes.
+2. **Capability explorer:** demographic filters and weighted rates. Present
+   state comparisons alphabetically with sample counts and review flags. No
+   significance rankings without design-based uncertainty estimates.
+3. **NPCI exploratory:** national total, classified and unclassified volumes.
+   Scatter X = state capable/adult ratio from `fct_state`; Y = classified
+   transactions per resident aged 15+. The delivered report shows all 36 points,
+   source flags in tooltips, and no fitted line. If adding a fitted line, filter
+   `included_in_fit = TRUE`; do not label it expected behaviour or an intervention target.
+4. **Methods:** official reconciliation, unknown state coverage, source links,
+   scope notes and the allocation-assumption table. Explain that invariance is
+   constructed, and that capability/gap allocations are circular for this test.
 
-Adults (crore) = DIVIDE ( [Adults], 10000000 )
+## Breaking changes
 
-Share of National Gap =
-DIVIDE (
-    [Excluded Adults],
-    CALCULATE ( [Excluded Adults], REMOVEFILTERS () )
-)
+- Remove `retention_from_prev` and `lost_here_crore` visuals/measures.
+- Replace `predicted_txn_per_adult` with `fitted_classified_txn_per_adult`.
+- Replace `performance` with neutral `comparison_label`.
+- The `opportunity_sizing.csv` output now contains hypothetical population
+  changes, not billions of transactions or an enablement ceiling.
+- Third-category records are retained in the exports to reconcile totals.
+- Source validation and national classified/unclassified totals have dedicated facts.
 
-Sample Size = SUM ( fct_segment[sample_n] )
-```
-
-### Gender gap
-
-```dax
-Female Capability =
-CALCULATE ( [Capability Rate], dim_sex[sex] = "Female" )
-
-Male Capability =
-CALCULATE ( [Capability Rate], dim_sex[sex] = "Male" )
-
-Gender Gap (pp) =
-( [Male Capability] - [Female Capability] ) * 100
-```
-
-### Transactions (state level)
-
-```dax
-Txn Volume (mn) = SUM ( fct_state[txn_volume_mn] )
-
-Txn per Adult =
-DIVIDE ( [Txn Volume (mn)] * 1000000, SUM ( fct_state[adults] ) )
-
-Residual = SUM ( fct_state[residual] )
-
-Performance Note =
-VAR r = [Residual]
-RETURN
-SWITCH (
-    TRUE (),
-    r < -10, "Transacts well below what its capability predicts — the "
-           & "constraint is downstream, most plausibly merchant acceptance.",
-    r > 10,  "Transacts above trend. Volume includes payments by visitors and "
-           & "by businesses headquartered here, against a resident denominator.",
-    "Close to the national trend line."
-)
-```
-
-`Performance Note` drives a card visual that changes text as the user selects a
-state — the same contextual explanation the Streamlit version gives.
-
-### Ranking guard
-
-```dax
-Rate Rank Valid =
-IF ( [Sample Size] >= 100, [Capability Rate], BLANK () )
-```
-
-Use this instead of `Capability Rate` on any visual that ranks *by* rate.
-Blanking small cells keeps segments resting on thirty-odd respondents out of a
-"lowest capability" ranking, where a 0% reading means "too few to detect"
-rather than a finding.
-
----
-
-## 4. Pages
-
-Three pages, mirroring the argument rather than the data structure.
-
-### Page 1 — What the data shows
-
-No slicers. This page should read top to bottom for someone who never clicks.
-
-| Visual | Type | Fields |
-|---|---|---|
-| Headline cards | Card ×3 | `Capability Rate`; `Excluded (crore)`; static text "19.5 crore online but cannot transact" |
-| Adoption funnel | Bar chart, horizontal | Axis `fct_funnel[stage]`, Value `fct_funnel[share_of_adults]` |
-| Barriers | Bar chart, horizontal | Axis `fct_barriers[barrier_group]`, Value `SUM(households)` |
-| Capability by age and group | Line chart | Axis `dim_age_band[age_band]`, Values `Capability Rate`, Legend `sector` + `sex` |
-
-On the funnel, set the "Able to transact online" data point to the accent
-colour manually (**Format → Data colors → expand → select the point**). The
-break at that stage is the finding; the other bars are context.
-
-### Page 2 — Explore
-
-| Visual | Type | Fields |
-|---|---|---|
-| Slicers | Slicer ×3 | `dim_sector[sector]`, `dim_age_band[age_band]`, `dim_sex[sex]` |
-| Segment table | Table | sector, age_band, sex, `Adults (crore)`, `Capability Rate`, `Excluded (crore)`, `Sample Size` |
-| State map | Filled map | Location `dim_state[state]`, Colour `Capability Rate` |
-| Capability vs usage | Scatter | X `Capability Rate`, Y `Txn per Adult`, Legend `fct_state[performance]`, Details `state` |
-| Context card | Card | `Performance Note` |
-
-Set the map's Location data category: select `dim_state[state]` → **Column
-tools → Data category → State or Province**. Without it Power BI cannot
-geocode.
-
-**Do not put `state` on the segment table.** With state included the data
-splits into 565 cells, most of them small, and any ranking simply re-sorts
-states by population — Uttar Pradesh takes nine of the top fifteen rows
-whatever the slicers say. The state question belongs on the map and the
-scatter, where transaction data is attached.
-
-### Page 3 — How reliable is this?
-
-| Visual | Type | Fields |
-|---|---|---|
-| Validation | Card ×2 | static: computed 99.46%, published ~99.5% |
-| Unattributed volume | Column chart | Axis `fct_unclassified[month]`, Value `unclassified_share_volume` |
-| Allocation sensitivity | Table | all columns of `fct_sensitivity` |
-| Limitations | Text boxes | see `DATA_NOTES.md` §10 and §12 |
-
-The sensitivity table is the strongest technical content in the project. Give
-it room and add a text box explaining that three of the four rules return an
-identical 0.637 because they scale or shift every state by the same constant,
-and that the fourth is circular.
-
----
-
-## 5. Formatting
-
-Match the Streamlit app and the static figures so the three never diverge:
-
-- Primary `#2C6E91`, accent `#C1440E`, text `#1A1A1A`, gridlines `#E2E0DC`
-- Set once under **View → Themes → Customize current theme**
-- Turn off visual borders and shadows; keep titles left-aligned
-- Format `Capability Rate` as Percentage, 1 decimal
-- Format `Excluded (crore)` as Decimal Number, 1 decimal
-
----
-
-## 6. Publish
-
-**Home → Publish** requires a Power BI account (the free tier works for
-publishing to My Workspace). Sharing a link needs Pro, which most students do
-not have.
-
-Practical alternative: commit the `.pbix` to the repository and add a
-screenshot of Page 1 to the README. Anyone with Desktop can open it, and the
-screenshot is what a recruiter will actually look at.
-
-Keep the file under GitHub's 100 MB limit — with these CSVs it will be well
-under 5 MB.
+Delete old static claims about merchant-side constraints, the irrelevance of
+unclassified volume, precise rankings, and intervention returns. Recheck
+filters, labels and cached values in Desktop before publishing or sharing a
+new screenshot. The current PBIX is a separate validated build; archived files
+remain unchanged historical artifacts.

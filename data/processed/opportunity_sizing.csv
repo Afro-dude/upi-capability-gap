@@ -1,3 +1,4 @@
-haircut,txns_per_quarter_bn,txns_per_month_bn,uplift_vs_classified_volume
-0.4,13.442894692363042,4.4809648974543475,0.4225111841520462
-0.6,20.164342038544564,6.721447346181521,0.6337667762280693
+assumed_share,baseline_excluded_population,hypothetical_newly_capable_population,interpretation
+0.05,469465634.02,23473281.701,User assumption applied to a survey point estimate; not a forecast
+0.1,469465634.02,46946563.402,User assumption applied to a survey point estimate; not a forecast
+0.25,469465634.02,117366408.505,User assumption applied to a survey point estimate; not a forecast
