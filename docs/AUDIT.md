@@ -36,8 +36,9 @@ were derived from NPCI; the sources have separate measures and geography.
    classified and total national ratios separately labelled in an audit table.
 6. Preserved all recorded sex categories in aggregate Power BI exports. Added
    review/uncertainty metadata and migration guidance for the old report.
-7. Rebuilt static figures and archived the superseded PBIX/screenshot. The
-   proprietary Power BI report itself has not been rebuilt.
+7. Rebuilt static figures and archived the superseded PBIX/screenshot. A separate
+   five-page Power BI report is now built and validated in Desktop, with its
+   editable project, portable aggregate snapshot and reproducible generator.
 
 ## Open items that must not be silently resolved
 
@@ -58,8 +59,10 @@ authoritative download and state-level attribution-coverage information have
 not been obtained. Country-wide unclassified share cannot establish each
 state's reporting coverage or payer residence.
 
-**Power BI:** corrected source tables and measures are supplied; the archived
-binary and image remain historical artifacts, not verified current outputs.
+**Power BI:** a separate five-page PBIX has now been built and checked in Desktop
+2.157.1354.0. Its embedded aggregates, native visuals, demographic filtering and
+population what-if calculator passed the documented checks. The archived binary
+and image remain historical artifacts, not current outputs.
 
 ## Verification
 

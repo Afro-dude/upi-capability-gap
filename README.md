@@ -95,8 +95,11 @@ not transaction projections. See [Power BI migration instructions](docs/POWERBI_
 The previous PBIX and screenshot are preserved under `docs/legacy/` as
 **superseded artifacts containing unsupported claims**. They have not been
 rebuilt in Power BI Desktop and must not be presented as the corrected report.
-Use the updated exports and [build instructions](docs/POWERBI_BUILD.md) to
-rebuild the report. Refreshing old data alone does not fix its measures/text.
+The corrected five-page [Power BI report](powerbi/UPI%20Capability%20Gap.pbix)
+is now built and checked in Power BI Desktop. Its [editable project and guide](powerbi/START_HERE.md)
+include the model, native visuals, demographic filters and population what-if
+calculator. Refresh reloads the embedded aggregate snapshot; it is not live data.
+See the [build instructions](docs/POWERBI_BUILD.md) to regenerate the project.
 
 ## Sources
 

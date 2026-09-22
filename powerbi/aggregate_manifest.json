@@ -1,0 +1,72 @@
+{
+  "period": "Jan-Mar 2025",
+  "source": "Audited aggregate CSV exports",
+  "tables": [
+    {
+      "file": "data/powerbi/dim_age_band.csv",
+      "rows": 5,
+      "sha256": "a072a57d67e239774e438b31d1c43e8ac3c81ad4af4f33cc7e28fa3324914106"
+    },
+    {
+      "file": "data/powerbi/dim_sector.csv",
+      "rows": 2,
+      "sha256": "cee1fe47d92f8776c4d70abd7927fc8c16eb046e8ae7a9123aa5cc8924151b36"
+    },
+    {
+      "file": "data/powerbi/dim_sex.csv",
+      "rows": 3,
+      "sha256": "773bd72a3adaa1695fc1691c0c0a720d6eb5a95b31919908a464dfdc802fa012"
+    },
+    {
+      "file": "data/powerbi/dim_state.csv",
+      "rows": 36,
+      "sha256": "dbb3bbc2d5f8621ba4bdbdc32a442ede304ad48ca0c23afe2d19461f8147b175"
+    },
+    {
+      "file": "data/powerbi/fct_barriers.csv",
+      "rows": 26,
+      "sha256": "ae1c9dc79967f63e738afbd5a5ef8f91be01205be8cfbee6be39bc09bf3fa1a7"
+    },
+    {
+      "file": "data/powerbi/fct_conditional_national.csv",
+      "rows": 1,
+      "sha256": "9bb708f035caa35abe50efbd487557a9cd143476f72960a8c4d3389df5097cec"
+    },
+    {
+      "file": "data/powerbi/fct_funnel.csv",
+      "rows": 7,
+      "sha256": "4a49db9ba350a1318e93606a75ab529c3bb34a32bf35b4cf22c736eaf5aa07d8"
+    },
+    {
+      "file": "data/powerbi/fct_npci_national.csv",
+      "rows": 1,
+      "sha256": "0a442131c352d886d45f59684ccc4f685a3e227453c50121f32161e1413a1306"
+    },
+    {
+      "file": "data/powerbi/fct_segment.csv",
+      "rows": 811,
+      "sha256": "77bcca52b9bdfd53aa79350dcc9513b0db78bbb47004e2cca4d9fc2e3a73cc50"
+    },
+    {
+      "file": "data/powerbi/fct_sensitivity.csv",
+      "rows": 5,
+      "sha256": "0024261afbf79f4000befc69cc4cb0f2ea575a593d4e36247b3c8e59bf97ad87"
+    },
+    {
+      "file": "data/powerbi/fct_source_validation.csv",
+      "rows": 36,
+      "sha256": "925393a4fcf4f20e71160ec4287c0368edd615abd07e87ffd81720f28d9e3562"
+    },
+    {
+      "file": "data/powerbi/fct_state.csv",
+      "rows": 36,
+      "sha256": "c108dbf2f5516c1f0fd7950224545f6a17befac9f6ac0776af28f749e7b4bbf5"
+    },
+    {
+      "file": "data/powerbi/fct_unclassified.csv",
+      "rows": 3,
+      "sha256": "80ce4cc258f0f0f8b92c2b55cd4d540d7b098c42dd3bfab3dacc3ba4b59cbc35"
+    }
+  ],
+  "refresh": "Embedded aggregate snapshot. Regenerate with src/build_powerbi_project.py after rebuilding the CSV exports."
+}

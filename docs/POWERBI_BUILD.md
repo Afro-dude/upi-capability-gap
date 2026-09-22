@@ -2,8 +2,17 @@
 
 The previous PBIX and screenshot in `docs/legacy/` are superseded. They contain
 old text, measures and cached data. **Do not present them as the corrected
-analysis.** The corrected CSV exports are ready, but a new PBIX must be built
-and checked in Power BI Desktop. A data refresh alone is insufficient.
+analysis.** The corrected five-page report is now available at
+`powerbi/UPI Capability Gap.pbix`, with an editable project in the same folder.
+It was loaded, refreshed, visually checked and saved in Power BI Desktop
+2.157.1354.0. All five pages rendered; national headlines, demographic filtering
+and the 0%/10%/100% population what-if results were checked.
+
+Run `python src/build_powerbi_project.py` after generating the CSV exports to
+rebuild the PBIP/PBIR definitions. Refresh in Desktop, verify the report and save
+the PBIX. The project embeds a portable aggregate snapshot; Refresh does not
+download new survey or NPCI data. Regeneration replaces generated definitions;
+preserve manual design edits separately. See `powerbi/START_HERE.md`.
 
 ## Load and model
 
@@ -55,8 +64,9 @@ must remain visible in appropriate tables/tooltips. HP remains provisional.
    significance rankings without design-based uncertainty estimates.
 3. **NPCI exploratory:** national total, classified and unclassified volumes.
    Scatter X = state capable/adult ratio from `fct_state`; Y = classified
-   transactions per resident aged 15+. Filter `included_in_fit = TRUE` for the
-   fitted line; do not label it expected behaviour or an intervention target.
+   transactions per resident aged 15+. The delivered report shows all 36 points,
+   source flags in tooltips, and no fitted line. If adding a fitted line, filter
+   `included_in_fit = TRUE`; do not label it expected behaviour or an intervention target.
 4. **Methods:** official reconciliation, unknown state coverage, source links,
    scope notes and the allocation-assumption table. Explain that invariance is
    constructed, and that capability/gap allocations are circular for this test.
@@ -74,4 +84,5 @@ must remain visible in appropriate tables/tooltips. HP remains provisional.
 Delete old static claims about merchant-side constraints, the irrelevance of
 unclassified volume, precise rankings, and intervention returns. Recheck
 filters, labels and cached values in Desktop before publishing or sharing a
-new screenshot. No new PBIX is claimed by this correction branch.
+new screenshot. The current PBIX is a separate validated build; archived files
+remain unchanged historical artifacts.

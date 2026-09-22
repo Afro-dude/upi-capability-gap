@@ -5,3 +5,6 @@ __pycache__/
 *.pyc
 venv/
 .DS_Store
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
+**/.pbi/unappliedChanges.json
