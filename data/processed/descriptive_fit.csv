@@ -1,0 +1,2 @@
+fit_scope,states_in_fit,pearson_r,r_squared,slope,intercept,interpretation
+Source-validated states; classified transactions only,35,0.6589149047446055,0.43416885169459246,154.6721472302896,-41.02220801395228,Descriptive association; no causal or intervention interpretation

@@ -1,322 +1,181 @@
-# Data notes
-
-Every non-obvious decision made in this analysis, with the source document that
-justifies it. This file exists so that each number can be defended.
-
----
-
-## 1. Source
-
-NSS 80th Round, **Comprehensive Modular Survey: Telecom (CMS-T)**, fielded
-January–March 2025 by the National Statistical Office. Unit-level data obtained
-from `microdata.gov.in` (catalogue 239).
-
-| File | Records |
-|---|---|
-| `CMST80HH.dta` | 34,950 households |
-| `CMST80PER.dta` | 142,065 persons |
-
-Both counts match `README_CMST_2025.docx` exactly, confirming a complete read.
-
-The STATA distribution was used rather than the fixed-width text files. The
-`.dta` files carry the same records; using them removes an entire class of
-byte-offset parsing error.
-
----
-
-## 2. Weights
-
-`README_CMST_2025.docx` states plainly: **Final Weight = MLT / 100**. The raw
-`mlt` field is the stratum-level multiplier `(N_st / n_st) * D1 * (H_sti /
-h_sti)` defined in section 4.1 of the methodology document.
-
-Applying it gives:
-
-- **30.7 crore households** — consistent with independent estimates of India's
-  household count.
-- **91.4 crore adults aged 15+**.
-
-All households within an FSU carry the same multiplier, as the README specifies.
-
-**Not done:** standard errors. The methodology document gives the full variance
-formula (section 3.6), which requires stratum and sub-stratum identifiers in a
-two-stage SRSWOR design. The identifiers are present in the data, so this is
-implementable, but every estimate reported here is a point estimate without a
-confidence interval. State-level and fine segment cells are the ones most
-affected.
-
----
-
-## 3. The UPI variable
-
-This is the single most important definition in the project, and it is easy to
-get wrong.
-
-The data layout describes `b4q12` only as *"Whether able to perform online
-banking transactions via devices like computers, or mobile"*, which reads like a
-yes/no item. It is not. The **schedule** (`Volume_II_CMST.pdf`, Block 4 Q12)
-gives the actual codes:
-
-| Code | Meaning |
-|---|---|
-| 1 | Yes, through UPI only |
-| 2 | Yes, through net banking or other means (except UPI) only |
-| 3 | Yes, both |
-| 4 | No |
-
-So:
-
-- **UPI-capable** = codes 1 or 3
-- **Online-transaction-capable** = codes 1, 2 or 3
-- Code 2 alone is only **0.3%** of adults — negligible, which is itself a
-  finding about how UPI has crowded out other retail digital payment methods.
-
-Anyone reading only the layout file would have concluded that UPI is not
-measured in the microdata and fallen back on a proxy. Read the schedule.
-
----
-
-## 4. Question routing, and why blanks are zeros
-
-`b4q12` is blank for 65,492 of 142,065 person records. Those blanks are not
-missing data; they are structural non-response driven by the schedule's skip
-logic:
-
-1. **Block 4** is administered only to persons aged 3+ who have code 1 in
-   Block 3 col. 5 **or** col. 6 — that is, who can operate a mobile phone or a
-   computer.
-2. **Q12 additionally requires age ≥ 15.**
-
-Verified empirically: `b4q12` is non-blank for 0.0% of under-15s and 71.8% of
-15+, exactly matching the stated routing.
-
-**Decision: for adults 15+, a blank `b4q12` is treated as not UPI-capable.**
-
-This is substantively correct rather than merely convenient. A person who
-cannot operate a phone or a computer at all cannot execute a UPI transaction.
-The schedule does not ask them because the answer is already determined.
-
-The consequence is that **the denominator throughout is all adults aged 15+**,
-not "adults who were asked the question". Using the latter would inflate every
-capability rate by roughly 40% and produce a badly flattering picture.
-
----
-
-## 5. Funnel construction
-
-| Stage | Definition | Source |
-|---|---|---|
-| Can operate a phone or computer | Block 3 col. 5 = 1 or col. 6 = 1 | Block 3 |
-| Had a mobile phone (3m) | `b4q3` ∈ {1,2,3} | Q3 |
-| Used a smartphone (3m) | `b4q4` = 1 | Q4 |
-| Able to use the internet | `b4q9` ∈ {1,2,3} | Q9 |
-| Used the internet (3m) | `b4q10` = 1 | Q10 |
-| Able to transact online | `b4q12` ∈ {1,2,3} | Q12 |
-| Able to transact via UPI | `b4q12` ∈ {1,3} | Q12 |
-
-Note that Q4 is itself conditional on Q3 ∈ {1,3}, and Q9 on Q4/Q6/Q8 = 1. The
-funnel is therefore genuinely nested: each stage is a subset of the one above
-it, which is what makes the conditional retention rates interpretable.
-
----
-
-## 6. Geography
-
-There is no state column. `README_CMST_2025.docx`: the **first two digits of
-`nss_reg`** give the State/UT code. Names are mapped from the "State code" sheet
-of `Data_Layout_CMST_2025.xlsx`.
-
-Note the code list skips 26 and includes 25 as the merged
-"D&N Haveli & Daman & Diu" UT.
-
-**Coverage caveat:** villages in the Andaman & Nicobar Islands that are hard to
-access year-round were excluded from the survey frame by design.
-
----
-
-## 7. Barrier variables — two of them, with different scopes
-
-There are two "reason" questions and they are **not** interchangeable.
-
-**Person-level (Block 4 Q16)** is asked only of people who are *able* to use the
-internet but did **not** use it in the last three months. That is a narrow and
-unusual group — people with the capability who chose not to exercise it. It is
-not a general measure of why people are offline.
-
-**Household-level (Block 5 Q5)** is asked of every household without internet at
-home, covering 4.2 crore households. This is the broader and more useful
-variable, and it is the one used for the headline barrier finding.
-
-Both are written out (`barriers_person.csv`, `barriers_household.csv`), but the
-argument rests on the household version. Conflating them would be a real error.
-
----
-
-## 8. Variables deliberately not used
-
-**MPCE (`b3q5`).** `Note_for_data_user - CMS-Telecom.docx` warns that household
-characteristics including consumption expenditure were collected *for
-consistency checking*, and advises against generating estimates resting solely
-on these auxiliary variables. CMS-T is not a consumption survey and its MPCE
-item is a single abbreviated question, not a full consumption schedule.
-
-It is loaded and available in `cmst.py` but **no finding in this project uses
-it**. An income-gradient analysis would need the Household Consumption
-Expenditure Survey or Global Findex instead.
-
-Cross-tabulating the survey's *own* indicators by age, sex and sector is a
-different matter and is exactly what the official report does; those axes are
-used freely.
-
----
-
-## 9. Small cells
-
-The full segment table has state × sector × age band × sex cells, some of which
-rest on very few sample persons. Cells with fewer than 30 unweighted
-observations are **flagged** (`unreliable = True`) rather than dropped, so the
-analyst decides. All headline figures quoted in the memo exclude flagged cells.
-
-This matters most for small UTs — Lakshadweep, Ladakh, Andaman & Nicobar — where
-even state-level estimates are thin.
-
----
-
-## 10. What this data cannot do
-
-Stated plainly, because these are the questions an interviewer should ask:
-
-1. **Capability is not usage.** Q12 asks whether a person is *able* to transact
-   via UPI, not whether they do, how often, or for how much. Every gap figure
-   here is an enablement gap, not a transaction forecast.
-
-2. **One point in time.** Jan–Mar 2025 only. No trend, no before/after, no
-   causal claim. Comparison to earlier NSS rounds would require checking that
-   the questions and routing are genuinely comparable, which they may not be —
-   CMS-T is a new short-duration survey format.
-
-3. **No transaction values.** Nothing in the survey records amounts. Linking
-   capability to volume requires external NPCI data at state level, and that
-   link is ecological: it supports statements about states, not about
-   individuals within them.
-
----
-
-## 11. Open items
-
-- **NPCI state-wise volumes not yet merged.** `data/processed/state_level.csv`
-  contains empty `npci_monthly_txn_volume` and `npci_monthly_txn_value_cr`
-  columns ready to be filled. NPCI began publishing state-wise UPI data in
-  June 2025; a substantial share of national volume is reported as
-  "unclassified" and cannot be attributed to any state, so any per-capita
-  figure must state whether that residual was excluded or distributed.
-- Standard errors, per section 2 above.
-
----
-
-## 12. NPCI state-wise transaction data
-
-**Source.** NPCI Ecosystem Statistics → *UPI Statewise Statistics*, monthly
-XLSX. Jan, Feb and Mar 2025 are used, chosen to match the CMS-T field period
-exactly so that capability and volume describe the same quarter. Using a later
-month would compare Jan–Mar 2025 capability against a period over which UPI grew
-substantially.
-
-**File shape.** Row 0 is a merged title cell; the real header is row 1. Volume
-and value arrive as strings with Indian-style comma grouping and must be
-de-comma'd before conversion. 36 states/UTs plus one `UNCLASSIFIED#` row.
-
-**Name mapping.** Three NPCI names differ from the NSS code list and are mapped
-explicitly: `JAMMU AND KASHMIR`, `DADRA & NAGAR HAVELI & DAMAN & DIU`,
-`ANDAMAN & NICOBAR`. The remaining 33 match on uppercase. The loader raises if
-any name fails to map rather than silently dropping a state — all 36 match.
-
-### 12.1 The unattributed volume, and why it turns out not to matter
-
-NPCI's disclaimer states that where location data was not received, the
-transaction is categorised as unclassified. In Q1 2025:
-
-| Month | Unclassified, volume | Unclassified, value |
-|---|---|---|
-| Jan 2025 | 34.6% | 32.6% |
-| Feb 2025 | 39.8% | 37.5% |
-| Mar 2025 | 39.9% | 37.4% |
-
-A 5.3pp swing inside a single quarter, so the share is not stable either.
-
-This looks disqualifying for state comparison, and the instinct to abandon the
-merge is reasonable. It is also wrong, for a mechanical reason.
-
-Four allocation rules were tested (`npci.allocate`):
-
-| Rule | Effect on each state's transactions-per-adult |
-|---|---|
-| `excluded` | baseline |
-| `proportional` | multiplies every state by the same constant |
-| `by_adults` | adds the same constant to every state |
-| `by_capable` | adds a term proportional to that state's capability rate |
-
-Multiplying every observation by a constant, or adding a constant to every
-observation, changes neither a rank ordering nor a Pearson correlation. So the
-first three rules are mathematically guaranteed to give identical answers — and
-they do, at r = 0.637 with rank correlation 1.000 against each other.
-
-`by_capable` gives r = 0.731, and that difference is an artefact, not a finding.
-Allocating unattributed volume in proportion to capable population and then
-correlating the result against capability rate builds the relationship into the
-data. **It must not be used to test the capability–usage relationship**, and it
-is retained in the code only as a demonstration of the trap.
-
-**Conclusion:** the unclassified bucket limits the interpretation of *absolute*
-per-capita levels — every state's figure is understated by roughly 40% — but is
-provably irrelevant to *relative* comparison, which is what the analysis rests
-on. All published results use `excluded`, the most conservative rule.
-
-### 12.2 Ecological inference
-
-Capability comes from person-level survey records; volume comes from
-state-level administrative aggregates. The merge therefore supports claims about
-states and not about individuals within them.
-
-Concretely: it is supported to say "states with lower capability transact less
-per adult." It is **not** supported to say "rural women aged 45+ generate X
-transactions" — their transactions are never observed. The segment breakdowns in
-this project are breakdowns of the *capability gap*; the volume estimate is a
-state-level projection applied to that gap, and is labelled as such.
-
-### 12.3 Per-capita usage is resident-denominated
-
-Transaction volume attributed to a state includes payments made by visitors and
-by businesses headquartered there, while the denominator is resident adults.
-Goa (+66.6 residual) and Delhi (+37.0) are the clearest cases — tourism and
-commercial concentration respectively. Their positive residuals should not be
-read as residents transacting unusually often.
-
-This is a genuine limitation on the residual analysis and cannot be fixed with
-the available data. It matters less for the negative residuals, which is where
-the argument in Finding 6 sits.
-
-### 12.4 The sizing calculation
-
-```
-unrealised transactions = gap population
-                        × transactions per capable adult
-                        × haircut
-```
-
-- **Benchmark:** 71.6 transactions per capable adult per quarter, computed as
-  attributed Q1 volume divided by weighted capable adult population.
-- **Gap population:** 46.9 crore adults aged 15+ who are not UPI-capable.
-- **Haircut:** 40% and 60% of benchmark, reported as a range.
-
-The haircut exists because newly enabled users are not drawn from the same
-distribution as existing ones — they skew older, poorer, more rural and more
-female, all of which predict lower transaction frequency. No haircut at all
-would assume the marginal user behaves like the average user, which is
-implausible on the face of it. The 40–60% band is a judgement, not an estimate
-from data, and is stated as such.
-
-The result — 4.5 to 6.7 billion transactions per month, a 42–63% uplift on
-attributed volume — is an **enablement ceiling**. It answers how large the
-opportunity is if capability were closed, not what would happen under any
-particular intervention.
+# Data notes and interpretation boundaries
+
+## 1. Sources and geography
+
+CMS-T, NSS 80th Round, January–March 2025: 142,065 person records and 34,950
+household records. The provided STATA files contain 106,631 persons aged 15+.
+In this project, “adults” in legacy column names means **age 15+**, not age 18+.
+
+The [official README](https://microdata.gov.in/NADA/index.php/catalog/239/download/4936)
+specifies `Final Weight = MLT/100` and the first two digits of NSS-Region as the
+State/UT code. The [layout](https://microdata.gov.in/NADA/index.php/catalog/239/download/4934)
+supplies the state names. Code 25 is the merged D&N Haveli & Daman & Diu;
+code 26 is not used. There are 36 state/UT codes in the supplied data. This
+geography exists in the survey independently of NPCI.
+
+FSU plus sample household number identifies a household. The frame excludes
+some Andaman and Nicobar villages which are inaccessible throughout the year.
+Sources retrieved for this review are logged in `docs/source_manifest.json`.
+
+## 2. Capability and routing
+
+Block 4 Q12: code 1 = UPI only; 2 = other online banking only; 3 = both;
+4 = unable. UPI capability is codes 1 or 3; online-banking capability is 1–3.
+The denominator is all persons aged 15+, including structural skips.
+
+Block 4 eligibility includes device operation, but this is not the only gate.
+Q9 follows eligible smartphone/tablet/computer use; Q12 also requires internet
+capability (Q9 codes 1–3) and age 15+. In the supplied data, 17,113 device-capable
+persons aged 15+ still have blank Q12. None of the internet-capable persons
+aged 15+ have blank Q12. The earlier explanation attributing every skip solely
+to inability to operate a device was incomplete.
+
+The loader rejects missing/invalid Q12 for eligible internet-capable adults,
+unknown nonblank Q12 codes, invalid weights and unmapped states. Structural
+skips become false for the capability indicators; unexpected missing eligible
+responses must not silently become false. See the [official schedule](https://microdata.gov.in/NADA/index.php/catalog/239/download/4939).
+
+## 3. Weights and source reconciliation
+
+Weighted rates are sums of weighted indicator values divided by sums of weights.
+Aggregated rates must be recomputed from their numerators and denominators,
+never averaged across states/cells. National totals include every recorded sex
+category and every state, including provisional HP estimates; presentation
+filters must not redefine national denominators silently.
+
+`data/reference/official_online_capability.csv` transcribes Table 12, page A85,
+age 15+, All/Person, from the [official report](https://mospi.gov.in/sites/default/files/publication_reports/CMST_report_m.pdf).
+`official_state_validation.csv` compares unrounded computed online-banking rates
+with the published one-decimal rates using a 0.05 percentage-point tolerance.
+35/36 match. **Himachal Pradesh: 64.3917% computed versus 66.2% published**.
+The cause remains unresolved. This is an online-banking check, not a claim
+that the published value is a direct UPI-capability rate.
+
+No survey records or weights are changed to force a match. HP is flagged in
+state views and omitted from the descriptive NPCI fit. New discrepancies stop
+the build. A resolved HP check will automatically remove that exclusion.
+National online-banking capability reproduces 48.9%; UPI capability is 48.6%.
+These checks do not independently validate weighted population totals.
+
+## 4. Separate indicators and valid conditional rates
+
+The seven displayed access/use/capability indicators are not nested. Among
+respondents aged 15+, 1,655 report internet capability without smartphone use,
+and 256 report online-banking capability without recent internet use.
+Accordingly, `retention_from_prev` and `lost_here_crore` have been removed.
+`funnel_national.csv` is retained as a legacy filename for prevalence indicators.
+
+Conditional online-banking capability among internet users is:
+
+    sum(weight × internet_used × online_capable) / sum(weight × internet_used)
+
+The excluded-online population is the sum of weights for respondents who used
+the internet but are not online capable. This gives about 19.5 crore people.
+The conditional rate is 69.55%. `conditional_sector_gender.csv` applies the same
+intersection within each group; the app and static chart share this table.
+No claim about owning a smartphone follows from recent internet use.
+
+## 5. Sampling uncertainty
+
+**No design-based confidence intervals are published.** The official
+[methodology](https://microdata.gov.in/NADA/index.php/catalog/239/download/4938),
+sections 3.6 and 4.1, uses two-stage SRSWOR variance terms requiring stratum/frame
+FSU counts N_st, sampled FSU counts n_st, listed household counts H_i,
+subdivision factors D1_i and sampled household counts h_i. The supplied files
+contain identifiers and final weights but not all the separate frame/listing
+components. A product embedded in a final weight does not identify its factors.
+
+The previous claim that identifiers alone made the full official formula
+implementable was too strong. Exact estimation needs Schedule 0.0/listing or
+equivalent frame metadata, plus explicit handling of singleton sampling strata.
+Do not substitute an ordinary binomial interval or an undocumented bootstrap.
+
+The display rule `n < 30` marks small cells. Its legacy field name `unreliable`
+does not mean cells with `False` are statistically precise. State respondent,
+household and FSU counts are provided as coverage diagnostics. Sorting point
+estimates or checking sample size is not a test of significant differences.
+Sex-specific comparisons also require appropriate domain variance estimates.
+
+## 6. Barrier variables and causal limits
+
+Household Q5 asks the main reason for no home internet; person Q16 applies to
+internet-capable people who did not recently use it. These have different
+denominators. Neither measures the causes of UPI non-capability directly.
+Reported literacy barriers do not prove that coverage or affordability
+interventions are exhausted, nor that onboarding has superior cost-effectiveness.
+
+Age/sex/sector differences are descriptive. They do not establish mechanisms,
+programme effectiveness, or which group should be prioritised. MPCE remains
+unused in accordance with the survey's warning about auxiliary variables.
+
+## 7. NPCI join and national reconciliation
+
+The owner supplied Jan, Feb and Mar 2025 state-wise workbooks; their titles match
+the intended quarter. The copies in `upi_data.zip` match the originals in
+`Dataset files` cell-for-cell. An independent live NPCI download has not been
+authenticated. Do not infer payer residence or geolocation collection details
+beyond the metadata available in these files.
+
+The loader requires exactly those three months, 36 unique mapped states/UTs
+and one `UNCLASSIFIED#` row per month, and nonnegative volume/value. The join is
+one-to-one after quarterly aggregation and fails if either source loses a state.
+
+| Period | Total volume (million) | Unclassified volume (million) | Unclassified share |
+|---|---:|---:|---:|
+| Jan 2025 | 16,996.00 | 5,881.16 | 34.60% |
+| Feb 2025 | 16,106.19 | 6,410.98 | 39.80% |
+| Mar 2025 | 18,301.51 | 7,294.90 | 39.86% |
+| Quarter | 51,403.70 | 19,587.04 | 38.10% |
+
+The quarter percentage is the ratio of summed volumes, not an unweighted mean
+of monthly percentages. Missing geography is not missing national volume.
+Classified state volume totals 31,816.66 million; no unclassified transactions
+are added to published observed state rows.
+
+## 8. Allocation assumptions do not identify true rankings
+
+Let O_s be classified volume, P_s population, U national unclassified volume.
+Proportional allocation gives `(O_s/P_s) × (1 + U/sum(O))`.
+Adult-population allocation gives `O_s/P_s + U/sum(P)`.
+Their ranking/correlation invariance is an algebraic property of their assumed
+allocations, not empirical evidence about the missing transactions.
+
+Actual missing volume may vary across states. It is therefore incorrect to
+claim all states are understated by about 40%, or that complete-volume rankings
+are unaffected. Exclusion preserves observed data, but does not eliminate
+selection bias or guarantee a conservative association.
+
+Allocation by capable population builds capability into the outcome. Allocation
+by excluded population demonstrates the opposite direction of the same problem.
+Both are labelled hypothetical and circular for testing this relationship.
+The assumption table retains all 36 states for comparability with the prior
+table; it is not the source-validated 35-state regression sample.
+
+## 9. Exploratory regression
+
+The fit uses equal-weight state/UT observations with classified transactions per
+resident aged 15+ as the outcome. Excluding unresolved HP gives 35 observations,
+r = 0.6589 and R² = 0.4342 in the supplied snapshot. The original all-36-state
+result r = 0.6366 remains reproducible in the assumption table.
+
+This is a descriptive association, not a causal decomposition or validated
+prediction. Residuals use neutral above/below-fit labels. The unexplained share
+cannot be assigned to merchant acceptance or a separate behavioural problem.
+Unknown state reporting coverage, survey uncertainty and a mismatch between
+transaction location and resident population can affect both signs of residuals.
+No respondent-level transaction inference follows from the ecological join.
+
+## 10. Scenarios and national benchmarks
+
+The supported scenario is `excluded population × explicitly assumed share
+becoming capable`. It is a hypothetical population calculation, not a forecast.
+No transaction intensity, treatment effect or cost assumption is inferred.
+The baseline remains a survey point estimate with unresolved sampling uncertainty.
+
+For transparency, `npci_national_summary.csv` reports total national volume
+including unclassified volume. Dividing by the survey capable population gives
+115.7 quarterly transactions per survey-capable person; using classified volume
+only gives 71.6. Neither is an observed per-user frequency: the populations and
+transaction roles are not linked. The previous 40–60% intensity assumption was
+arbitrary, and its result was neither a forecast nor a strict upper bound.
+Transaction projections and the “enablement ceiling” claim have been withdrawn.

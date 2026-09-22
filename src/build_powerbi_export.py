@@ -34,7 +34,6 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
 
     seg = pd.read_csv(PROCESSED / "segment_gap_table.csv")
-    seg = seg[seg["gender_name"] != "Transgender"].copy()
     state = pd.read_csv(PROCESSED / "state_level.csv")
     cvu = pd.read_csv(PROCESSED / "state_capability_vs_usage.csv")
     funnel = pd.read_csv(PROCESSED / "funnel_national.csv")
@@ -73,7 +72,7 @@ def main():
                                       "35-59", "60+"]}) \
         .to_csv(OUT / "dim_age_band.csv", index=False)
 
-    pd.DataFrame({"sex": ["Female", "Male"], "sex_sort": [1, 2]}) \
+    pd.DataFrame({"sex": ["Female", "Male", "Transgender"], "sex_sort": [1, 2, 3]}) \
         .to_csv(OUT / "dim_sex.csv", index=False)
 
     # ---------------- facts --------------------------------------------
@@ -85,15 +84,15 @@ def main():
         "adult_pop": "adults", "upi_capable_pop": "capable_adults",
         "gap_pop": "excluded_adults", "n_unweighted": "sample_n",
     })[["state", "sector", "age_band", "sex",
-        "adults", "capable_adults", "excluded_adults", "sample_n"]]
+        "adults", "capable_adults", "excluded_adults", "sample_n", "unreliable", "uncertainty_status"]]
     fct_segment.to_csv(OUT / "fct_segment.csv", index=False)
 
     fct_state = (state[["state", "adult_pop", "upi_capable_pop", "gap_pop",
                         "n_unweighted", "female_rate", "male_rate",
-                        "gender_gap_pp"]]
+                        "gender_gap_pp", "n_fsu", "review_status", "matches_published_precision", "uncertainty_status"]]
                  .merge(cvu[["state", "total_volume_mn", "value_cr",
                              "txn_per_adult", "txn_per_capable_adult",
-                             "predicted_txn_per_adult", "residual"]],
+                             "fitted_classified_txn_per_adult", "residual", "included_in_fit", "transaction_scope", "comparison_label"]],
                         on="state", how="left")
                  .rename(columns={"adult_pop": "adults",
                                   "upi_capable_pop": "capable_adults",
@@ -101,8 +100,7 @@ def main():
                                   "n_unweighted": "sample_n",
                                   "total_volume_mn": "txn_volume_mn",
                                   "value_cr": "txn_value_cr"}))
-    fct_state["performance"] = fct_state["residual"].apply(
-        lambda r: "Converts above trend" if r >= 0 else "Capable but not converting")
+    fct_state['comparison_label'] = fct_state['comparison_label'].fillna('Unavailable')
     fct_state.to_csv(OUT / "fct_state.csv", index=False)
 
     funnel = funnel.copy()
@@ -143,6 +141,10 @@ def main():
     }).to_csv(OUT / "fct_sensitivity.csv", index=False)
 
     unc.to_csv(OUT / "fct_unclassified.csv", index=False)
+    for source, target in [('conditional_national.csv','fct_conditional_national.csv'),
+                           ('official_state_validation.csv','fct_source_validation.csv'),
+                           ('npci_national_summary.csv','fct_npci_national.csv')]:
+        pd.read_csv(PROCESSED / source).to_csv(OUT / target, index=False)
 
     print(f"Power BI star schema written to {OUT}/")
     for f in sorted(OUT.glob("*.csv")):

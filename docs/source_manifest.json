@@ -1,0 +1,141 @@
+{
+  "audit_date": "2026-09-22",
+  "repository": "https://github.com/Afro-dude/upi-capability-gap",
+  "base_commit": "0fb5705119e616d2b825aa8c2d62955cce9d658a",
+  "hash_algorithm": "SHA256",
+  "files": [
+    {
+      "name": "CMST_NMDS_2.0_V2.xlsx",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 14792,
+      "sha256": "30ad8de87bc0bed8c4a243c0232e965d06739cabc3208ab06de87c230f83ba9a"
+    },
+    {
+      "name": "CODEs for Blocks of Sch - CMS-Telecom.xlsx",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 18968,
+      "sha256": "2a4166cc9c7aff242093e65dc006574452862a274f2f7a72efea0de5a52fdf77"
+    },
+    {
+      "name": "Data_Layout_CMST_2025.xlsx",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 19508,
+      "sha256": "a456c23ad80ff79ebf1069b55d38a1b57541b326ebd3b9380d3858c9eca842bb"
+    },
+    {
+      "name": "Ecosystem-Statistics-UPI-Upi-statewise-statistics-2025-Feb.xlsx",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 10174,
+      "sha256": "1e3432a28695f37d71625f7c81be11cbb921f66d35d420d898830409276a5deb"
+    },
+    {
+      "name": "Ecosystem-Statistics-UPI-Upi-statewise-statistics-2025-Jan.xlsx",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 10179,
+      "sha256": "421b6819eaadd694dd94ee3ba794a1bba4cfe00b48fc16c8dbd77105f57f2ea4"
+    },
+    {
+      "name": "Ecosystem-Statistics-UPI-Upi-statewise-statistics-2025-Mar.xlsx",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 10183,
+      "sha256": "7e5df49719c1b0de652921e7095cf21fe0c2bf746daa3c225dd3e379aa51b1e6"
+    },
+    {
+      "name": "Note_for_data_user - CMS-Telecom.docx",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 16493,
+      "sha256": "1e30b6be9dcc1420666ffe07846bbbf72bc31ba7a73bc7a8366e52bd92c93250"
+    },
+    {
+      "name": "README_CMST_2025.docx",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 21177,
+      "sha256": "065be4c26591430fda0fff3a1c4505467689916f78b43c0d92cc416c3e904116"
+    },
+    {
+      "name": "README_CMST_SDATE_2025 (1).docx",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 21311,
+      "sha256": "645296c611f4073f35201e42f4e18aded154b842390e98264c6b87259c60a33d"
+    },
+    {
+      "name": "Survey methodology and estimation procedure - CMS-Telecom.pdf",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 309886,
+      "sha256": "49772b9074a6d86626a890f4d8a0dc25b15c12c97af69dfe2cc4513fa58c0287"
+    },
+    {
+      "name": "Volume_I_CMST.pdf",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 3225954,
+      "sha256": "578d98290e11534251cefa5fd6c7db0965439622cb3942bdfb2e61d8b3a08570"
+    },
+    {
+      "name": "Volume_II_CMST.pdf",
+      "origin": "Owner-supplied Dataset files",
+      "bytes": 426525,
+      "sha256": "d7cc7f99bae990c171cf43940a23a37b9ccda9d1f2caae43b7507236c062aaf3"
+    },
+    {
+      "name": "CMST80HH.dta",
+      "origin": "Owner-supplied upi_data.zip",
+      "bytes": 2978553,
+      "sha256": "91a6cbb1174cb5433bc971b4029b5d6d67f2c561caf30581382a6062a77a134e"
+    },
+    {
+      "name": "CMST80PER.dta",
+      "origin": "Owner-supplied upi_data.zip",
+      "bytes": 10097709,
+      "sha256": "94c37715301bf8a06b28bb703112c6f2a1c0b07b13b4365170fe9402452520ed"
+    },
+    {
+      "name": "upi_statewise_2025-Feb.xlsx",
+      "origin": "Owner-supplied upi_data.zip",
+      "bytes": 10174,
+      "sha256": "1e3432a28695f37d71625f7c81be11cbb921f66d35d420d898830409276a5deb"
+    },
+    {
+      "name": "upi_statewise_2025-Jan.xlsx",
+      "origin": "Owner-supplied upi_data.zip",
+      "bytes": 10179,
+      "sha256": "421b6819eaadd694dd94ee3ba794a1bba4cfe00b48fc16c8dbd77105f57f2ea4"
+    },
+    {
+      "name": "upi_statewise_2025-Mar.xlsx",
+      "origin": "Owner-supplied upi_data.zip",
+      "bytes": 10183,
+      "sha256": "7e5df49719c1b0de652921e7095cf21fe0c2bf746daa3c225dd3e379aa51b1e6"
+    },
+    {
+      "name": "layout.xlsx",
+      "origin": "https://microdata.gov.in/NADA/index.php/catalog/239/download/4934",
+      "bytes": 19508,
+      "sha256": "a456c23ad80ff79ebf1069b55d38a1b57541b326ebd3b9380d3858c9eca842bb"
+    },
+    {
+      "name": "methodology.pdf",
+      "origin": "https://microdata.gov.in/NADA/index.php/catalog/239/download/4938",
+      "bytes": 309886,
+      "sha256": "49772b9074a6d86626a890f4d8a0dc25b15c12c97af69dfe2cc4513fa58c0287"
+    },
+    {
+      "name": "readme.docx",
+      "origin": "https://microdata.gov.in/NADA/index.php/catalog/239/download/4936",
+      "bytes": 21177,
+      "sha256": "065be4c26591430fda0fff3a1c4505467689916f78b43c0d92cc416c3e904116"
+    },
+    {
+      "name": "schedule.pdf",
+      "origin": "https://microdata.gov.in/NADA/index.php/catalog/239/download/4939",
+      "bytes": 426525,
+      "sha256": "d7cc7f99bae990c171cf43940a23a37b9ccda9d1f2caae43b7507236c062aaf3"
+    }
+  ],
+  "official_reference": {
+    "url": "https://mospi.gov.in/sites/default/files/publication_reports/CMST_report_m.pdf",
+    "table": "Table 12, page A85, age 15+, All / Person",
+    "extraction": "Manually transcribed state rates, checked against reproduced microdata",
+    "local_reference": "data/reference/official_online_capability.csv"
+  },
+  "npci_verification": "Owner-provided originals match analysis inputs cell-for-cell; no fresh authoritative NPCI download verified"
+}

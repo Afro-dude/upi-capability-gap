@@ -3,9 +3,9 @@ build_analysis.py -- runs the full analysis and writes every processed table.
 
 Order of operations:
   0. Validation gate: reproduce a published CMS-T figure.
-  1. Adoption funnel, national and by sector.
+  1. Separate prevalence indicators and respondent-level conditional rates.
   2. Segment gap table (state x sector x age x sex).
-  3. Barrier diagnosis.
+  3. Reported internet barriers (not UPI-specific causal evidence).
   4. State-level file, ready to join to NPCI transaction data.
 """
 
@@ -16,6 +16,7 @@ from cmst import (
     load_person, load_household, wmean, wtotal, rate_table,
     PROCESSED, OUTPUTS, AGE_LABELS,
 )
+from validation import official_state_check
 
 FUNNEL = [
     ("s1_can_use_device",   "Can operate a phone or computer"),
@@ -50,10 +51,9 @@ def validation_gate(adults):
 
 
 def build_funnel(adults):
-    """National funnel with absolute and conditional retention rates."""
+    """Independent prevalence indicators; the legacy filename is retained."""
     rows = []
     base = wtotal(adults)
-    prev = base
     for col, label in FUNNEL:
         n = wtotal(adults, col)
         rows.append({
@@ -61,10 +61,37 @@ def build_funnel(adults):
             "variable": col,
             "population_crore": n / 1e7,
             "pct_of_adults": n / base,
-            "retention_from_prev": n / prev if prev else np.nan,
-            "lost_here_crore": (prev - n) / 1e7,
         })
-        prev = n
+    return pd.DataFrame(rows)
+
+
+def conditional_table(adults, by=None):
+    """Actual intersections among recent internet users, not ratios of marginals."""
+    groups = [((), adults)] if not by else adults.groupby(by, observed=True)
+    rows = []
+    for key, d in groups:
+        key = key if isinstance(key, tuple) else (key,)
+        online = d[d['s5_used_internet']]
+        denom = wtotal(online)
+        capable = wtotal(online, 's6_can_bank_online')
+        row = dict(zip(by or [], key))
+        row.update(internet_users=denom, online_capable_internet_users=capable,
+                   internet_users_not_online_capable=denom-capable,
+                   conditional_rate=capable/denom if denom else np.nan,
+                   n_internet_users=len(online))
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def transition_checks(adults):
+    rows = []
+    for (prev, prev_label), (current, current_label) in zip(FUNNEL, FUNNEL[1:]):
+        both = adults[prev] & adults[current]
+        outside = ~adults[prev] & adults[current]
+        rows.append({'previous': prev_label, 'current': current_label,
+                     'current_outside_previous_n': int(outside.sum()),
+                     'current_outside_previous_population': wtotal(adults, outside),
+                     'conditional_rate': wtotal(adults, both)/wtotal(adults, prev)})
     return pd.DataFrame(rows)
 
 
@@ -80,6 +107,8 @@ def funnel_by(adults, by):
 
 
 def main():
+    PROCESSED.mkdir(parents=True, exist_ok=True)
+    OUTPUTS.mkdir(parents=True, exist_ok=True)
     person = load_person()
     hh = load_household()
     adults = person[person["age"] >= 15].copy()
@@ -92,14 +121,25 @@ def main():
 
     if not validation_gate(adults):
         raise SystemExit("Validation gate failed -- stopping.")
+    official = official_state_check(adults)
+    official.to_csv(PROCESSED / 'official_state_validation.csv', index=False)
+    print(official.loc[~official.matches_published_precision].to_string(index=False))
+    conditional_table(adults).to_csv(PROCESSED / 'conditional_national.csv', index=False)
+    conditional_table(adults, ['sector_name', 'gender_name']).to_csv(
+        PROCESSED / 'conditional_sector_gender.csv', index=False)
+    transition_checks(adults).to_csv(PROCESSED / 'indicator_overlap_checks.csv', index=False)
+    pd.DataFrame([{'adult_pop': wtotal(adults),
+                   'upi_capable_pop': wtotal(adults, 's7_upi_capable'),
+                   'upi_capable_rate': wmean(adults, 's7_upi_capable'),
+                   'gap_pop': wtotal(adults, ~adults.s7_upi_capable),
+                   'n_unweighted': len(adults)}]).to_csv(PROCESSED / 'national_summary.csv', index=False)
 
     # ---------------- 1. Funnel ----------------------------------------
     funnel = build_funnel(adults)
     funnel.to_csv(PROCESSED / "funnel_national.csv", index=False)
-    print("NATIONAL ADOPTION FUNNEL (adults 15+)")
+    print("NATIONAL INDICATORS (persons aged 15+; not sequential stages)")
     for _, r in funnel.iterrows():
-        print(f"  {r['stage']:<38} {r['pct_of_adults']:6.1%}"
-              f"   (retains {r['retention_from_prev']:5.1%} of previous)")
+        print(f"  {r['stage']:<38} {r['pct_of_adults']:6.1%}")
     print()
 
     funnel_by(adults, ["sector_name"]).to_csv(PROCESSED / "funnel_by_sector.csv")
@@ -118,6 +158,9 @@ def main():
     seg["gap_pop"] = seg["adult_pop"] - seg["upi_capable_pop"]
     seg = seg.sort_values("gap_pop", ascending=False)
     seg.to_csv(PROCESSED / "segment_gap_table.csv", index=False)
+    national_seg = rate_table(adults, ['sector_name', 'age_band', 'gender_name'], 's7_upi_capable')
+    national_seg['gap_pop'] = national_seg.pop_weighted - national_seg.count_weighted
+    national_seg.to_csv(PROCESSED / 'national_segments.csv', index=False)
 
     print("TEN LARGEST CAPABILITY GAPS BY SEGMENT")
     print("(segment = state x sector x age band x sex)")
@@ -188,15 +231,15 @@ def main():
     st = st.merge(fr.rename(columns={"rate": "female_rate"}), on="state_code", how="left")
     st = st.merge(mr.rename(columns={"rate": "male_rate"}), on="state_code", how="left")
     st["gender_gap_pp"] = (st["male_rate"] - st["female_rate"]) * 100
-
-    # Empty columns for the NPCI merge -- see docs/npci_join_template.csv
-    st["npci_monthly_txn_volume"] = np.nan
-    st["npci_monthly_txn_value_cr"] = np.nan
-
-    st = st.sort_values("upi_capable_rate", ascending=False)
+    st = st.merge(official[['state_code', 'review_status', 'matches_published_precision']],
+                  on='state_code', validate='one_to_one')
+    coverage = adults.groupby('state_code').agg(n_fsu=('fsu', 'nunique'),
+                                                n_households=('hhid', 'nunique')).reset_index()
+    st = st.merge(coverage, on='state_code', validate='one_to_one')
+    st = st.sort_values('state')
     st.to_csv(PROCESSED / "state_level.csv", index=False)
 
-    print("UPI CAPABILITY BY STATE (top 8 and bottom 8, reliable cells only)")
+    print("UPI CAPABILITY BY STATE (alphabetical excerpts, n >= 30; precision unverified)")
     rel = st[~st["unreliable"]]
     for _, r in rel.head(8).iterrows():
         print(f"  {r['state'][:24]:<24} {r['upi_capable_rate']:6.1%}   "

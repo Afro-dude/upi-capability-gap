@@ -1,0 +1,7 @@
+previous,current,current_outside_previous_n,current_outside_previous_population,conditional_rate
+Can operate a phone or computer,Had access to a mobile phone (3m),0,0.0,0.9924575613775882
+Had access to a mobile phone (3m),Used a smartphone (3m),0,0.0,0.8143790391186734
+Used a smartphone (3m),Able to use the internet,1655,13811201.709999999,0.974744203127537
+Able to use the internet,Used the internet (3m),0,0.0,0.9920299331461655
+Used the internet (3m),Able to transact online,256,2141568.87,0.6955178704617511
+Able to transact online,Able to transact via UPI,0,0.0,0.9944738990411721

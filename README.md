@@ -1,250 +1,108 @@
 # India's Digital Payments Capability Gap
 
-### [Explore the interactive dashboard →](https://upi-capability-gap.streamlit.app/)
+An exploration of UPI capability among persons aged 15+, using the NSS 80th
+Round Comprehensive Modular Survey: Telecom (January–March 2025). NPCI's
+state-attributed transaction volumes are a separate, exploratory comparison.
 
-Who *can't* use UPI, where they are, where in the adoption chain they get stuck,
-and what closing the gap would be worth — from official survey microdata joined
-to NPCI transaction volumes.
+## Results and their limits
 
-**Sources:** NSS 80th Round, Comprehensive Modular Survey: Telecom (Jan–Mar
-2025), National Statistical Office — 1,42,065 individuals across 34,950
-households, weighted to 91.4 crore adults. NPCI state-wise UPI statistics for
-the same quarter.
+- The supplied survey microdata yields **48.6% UPI-capable** and an estimated
+  **46.9 crore persons aged 15+ not UPI-capable**, using MLT/100 weights.
+- **19.5 crore recent internet users report being unable to transact online**.
+  This is calculated from respondent intersections, not subtraction of unrelated totals.
+- Survey state geography is decoded from NSS-Region; it is not imputed from NPCI.
+- **38.1% of Q1 NPCI transaction volume has no state classification**. It remains
+  in national totals and is excluded from observed state totals. State-specific
+  missing shares are unknown; complete-volume rankings are not established.
+- Confidence intervals are unavailable. The official variance formula needs
+  sampling-frame/listing quantities absent from the supplied extracts. A sample
+  threshold is a display guard, not a precision guarantee.
 
----
+![Separate access, use and capability indicators](outputs/fig1_funnel.png)
+![Capability among recent internet users](outputs/fig3_conversion.png)
+![State capability point estimates](outputs/fig4_states.png)
+![Exploratory classified transaction association](outputs/fig5_capability_vs_usage.png)
 
-## Why this data
-
-NPCI's published statistics describe transactions, not people. They can say how
-much volume moved through which state, but there is no person attached to any
-row — so they cannot answer who is excluded, or why.
-
-CMS-T asks individuals directly, and its Block 4 Q12 distinguishes UPI
-capability from other online banking. That makes it possible to build an
-adoption funnel, locate the exact stage at which each demographic segment drops
-out, and then test that against what actually gets transacted.
-
----
-
-## Headline findings
-
-**48.6% of Indian adults can transact via UPI. 46.9 crore cannot.**
-
-**1. The chain breaks after connectivity, not before.** 70% of adults use the
-internet; only 48.9% can transact online. **19.5 crore people own the device,
-have the connection, and stop at the payment.**
-
-![Adoption funnel](outputs/fig1_funnel.png)
-
-**2. Households blame skill, not cost or coverage.** Among 4.2 crore households
-without home internet: digital literacy 47.6%, cost 10.5%, availability **2.8%**.
-
-![Barriers to internet access](outputs/fig2_barriers.png)
-
-**3. The gap is 60.6% female, and it survives connectivity.** Among adults who
-*already use the internet*, 79% of men can transact online versus 58% of women.
-
-![The gap survives connectivity](outputs/fig3_conversion.png)
-
-**4. 45+ is over half the gap.** Capability falls from 67.5% at 25–34 to 31.3%
-at 45–59 to 12.4% at 60+.
-
-**5. Two states with the same headline number can have opposite problems.**
-Mizoram (67.2% capable) and D&N Haveli & Daman & Diu (66.1%) sit one place apart
-in the national ranking, but Mizoram's gender gap is 5 points and D&N Haveli's
-is 46. Comparable overall capability, completely different outcomes for women —
-so the gender gap is not simply a function of development level.
-
-Tripura is the sharpest outlier in the other direction: **22.7% capable, 14
-points below the next-lowest state**, on a sample of 1,457 adults. That is a
-break in the distribution, not a tail.
-
-![UPI capability by state and sex](outputs/fig4_states.png)
-
-**6. Capability explains about 40% of state usage. The rest is a second problem,
-and it has a geography.** Joining NPCI's state-wise volumes for the same quarter
-gives R² = 0.405 (p < 0.001). The states furthest *below* the trend — capable
-populations transacting far less than expected — are almost all Northeastern or
-hill states: Manipur, Himachal Pradesh, Meghalaya, Jammu & Kashmir, Mizoram,
-Sikkim. Enabling more people there is not the binding constraint.
-
-![Capability vs usage](outputs/fig5_capability_vs_usage.png)
-
-**7. The gap is worth 4.5–6.7 billion transactions a month.** Applying the
-observed national intensity of 71.6 quarterly transactions per capable adult to
-the 46.9 crore gap population, at a 40–60% haircut, gives a 42–63% uplift on
-currently attributed volume. A range, not a point estimate — newly enabled users
-skew older, poorer and more rural, and will not transact at the current average.
-
-*Read the small UTs with caution — Andaman & Nicobar, Lakshadweep and Ladakh
-rest on a few hundred sample adults each, and no confidence intervals are
-computed yet (see Limitations).*
-
-Full argument and recommendations: [`docs/MEMO.md`](docs/MEMO.md).
-
----
+The indicators are not a sequential adoption funnel. Household internet
+barriers do not identify UPI-specific causes. Regression residuals do not
+diagnose merchant acceptance, individual behaviour, or intervention needs.
+Allocation rules which preserve rankings by construction cannot establish
+robustness to the unknown real missing-data pattern.
 
 ## Dashboard
 
-**[upi-capability-gap.streamlit.app](https://upi-capability-gap.streamlit.app/)**
-
-Three views: the findings, a segment and state explorer, and the reliability
-checks. It reads only from `data/processed/`, which *is* committed, so it runs
-without the raw microdata and deploys straight from this repository.
-
-To run it locally:
-
-```bash
+```sh
+pip install -r requirements.txt
 streamlit run app.py
 ```
 
-### Power BI
+The app reads committed aggregates and runs without raw survey data. It has a
+survey overview, capability explorer, separately labelled NPCI view, a
+population-based what-if calculator, source reconciliation, and download tables.
+The calculator multiplies an explicitly assumed adoption share by a survey
+population estimate. It uses no ML and predicts neither programme effects nor
+additional transactions.
 
-![Power BI dashboard](outputs/powerbi_dashboard.png)
+The existing [Streamlit deployment](https://upi-capability-gap.streamlit.app/)
+will show these revisions only after this branch is merged and redeployed.
 
-The `.pbix` is in the repository root. A star-schema export is produced by
-`src/build_powerbi_export.py` (ten CSVs in `data/powerbi/`), with the model,
-DAX measures and page layout in [`docs/POWERBI_BUILD.md`](docs/POWERBI_BUILD.md).
+## Reproduce the analysis
 
-Rates are deliberately not stored in the export — Power BI computes them as
-measures from summed numerators and denominators. Averaging stored per-state
-rates instead would weight every state equally and put national capability at
-53.6% rather than 48.6%.
+Place `CMST80PER.dta` and `CMST80HH.dta` in `data/raw/`. Place the original
+January, February and March NPCI workbooks in `data/raw/npci/`, named
+`upi_statewise_2025-Jan.xlsx`, `upi_statewise_2025-Feb.xlsx`, and
+`upi_statewise_2025-Mar.xlsx`. Raw data are ignored by Git.
 
----
-
-## On the 40% of UPI volume NPCI cannot place
-
-Between **34.6% and 39.9%** of national UPI volume in Q1 2025 is bucketed as
-"unclassified" — NPCI assigns this label wherever a UPI app did not send
-location data. That sounds fatal for any state comparison. It is not, and the
-reason is worth stating precisely.
-
-| Allocation rule | r vs capability | Rank corr. vs *excluded* |
-|---|---|---|
-| Exclude the residual | 0.637 | 1.000 |
-| Split in proportion to observed volume | 0.637 | 1.000 |
-| Split by adult population | 0.637 | 1.000 |
-| Split by UPI-capable population | 0.731 | 0.981 |
-
-The first three either scale or shift every state by the same constant, and
-neither operation can change a ranking or a Pearson correlation. Only the fourth
-moves the answer — and that rule is **circular**, since it allocates by the
-variable under test and manufactures the relationship being measured.
-
-So the residual is a real limit on *absolute* per-capita levels and irrelevant
-to the *relative* comparison. All results use the conservative rule (excluded).
-
----
-
-## Validation
-
-The pipeline reproduces a published CMS-T figure before it produces anything
-else. Among adults aged 15–29 able to transact online, the share able to do so
-via UPI:
-
-```
-computed  : 99.46%
-published : ~99.5%
-RESULT    : PASS
+```sh
+python src/build_analysis.py
+python src/build_npci_analysis.py
+python src/build_powerbi_export.py
+python src/build_charts.py
+pip install -r requirements-dev.txt
+python -m pytest
 ```
 
-`build_analysis.py` halts if this check fails. Weighted totals independently
-land at 30.7 crore households, consistent with external estimates.
+Builds check eligible Q12 responses, positive weights, state mappings, exact
+quarter coverage, unique state-month rows, complete joins and official state
+reconciliation. Unexpected state discrepancies stop the survey build. The
+documented HP discrepancy is flagged, never replaced with an assumed correction.
 
----
+The official online-banking cross-check matches 35 of 36 states/UTs at displayed
+precision. Himachal Pradesh differs by 1.8 percentage points; its estimates are
+retained, with a note, and omitted from the exploratory regression pending
+reconciliation. Details are in the [source audit](docs/AUDIT.md).
 
-## Structure
+## Files
 
-```
-├── src/
-│   ├── cmst.py                  loading, weights, code maps, funnel definitions
-│   ├── npci.py                  NPCI state-wise loader and allocation rules
-│   ├── build_analysis.py        validation gate → CMS-T tables
-│   ├── build_npci_analysis.py   allocation sensitivity, regression, sizing
-│   ├── build_powerbi_export.py  star schema for Power BI
-│   └── build_charts.py          the five figures
-├── data/
-│   ├── raw/                     CMST80HH.dta, CMST80PER.dta  (not committed)
-│   │   └── npci/                upi_statewise_2025-{Jan,Feb,Mar}.xlsx
-│   ├── processed/               generated tables
-│   └── powerbi/                 star schema (dim_* and fct_*)
-├── outputs/                     generated figures
-├── app.py                       Streamlit dashboard
-├── docs/
-│   ├── MEMO.md                  the analytical memo
-│   └── POWERBI_BUILD.md         model, DAX, page layout
-├── DATA_NOTES.md                every methodological decision, with sources
-├── requirements.txt
-└── README.md
-```
+| Location | Purpose |
+|---|---|
+| `src/cmst.py`, `src/build_analysis.py` | Survey loading and weighted indicators |
+| `src/validation.py`, `data/reference/` | Official Table 12 reconciliation |
+| `src/npci.py`, `src/build_npci_analysis.py` | Classified transaction comparison and assumption demonstrations |
+| `data/processed/` | Reproducible app inputs, overlap checks and validation outputs |
+| `data/powerbi/` | Corrected Power BI exports, including scope and review flags |
+| `DATA_NOTES.md` | Definitions, limitations, variance requirements and source links |
+| `docs/AUDIT.md` | What was checked, corrected and left unresolved |
+| `docs/MERN_PLAN.md` | Revised MERN scope based on defensible measures |
 
----
+`funnel_*.csv`, `fig1_funnel.png`, and `opportunity_sizing.csv` retain legacy
+filenames. The first now contains separate prevalence indicators with no
+retention/loss columns. Opportunity sizing now contains population what-ifs,
+not transaction projections. See [Power BI migration instructions](docs/POWERBI_BUILD.md).
 
-## Running it
+## Power BI status
 
-Neither dataset is committed.
+The previous PBIX and screenshot are preserved under `docs/legacy/` as
+**superseded artifacts containing unsupported claims**. They have not been
+rebuilt in Power BI Desktop and must not be presented as the corrected report.
+Use the updated exports and [build instructions](docs/POWERBI_BUILD.md) to
+rebuild the report. Refreshing old data alone does not fix its measures/text.
 
-**Survey microdata** — [microdata.gov.in](https://microdata.gov.in), catalogue
-239, *Comprehensive Modular Survey on Telecom, NSS 80th Round*. Place
-`CMST80HH.dta` and `CMST80PER.dta` in `data/raw/`.
+## Sources
 
-**NPCI volumes** —
-[npci.org.in](https://www.npci.org.in/what-we-do/upi/upi-ecosystem-statistics)
-→ *UPI Statewise Statistics*. Download Jan, Feb and Mar 2025 and save in
-`data/raw/npci/` as `upi_statewise_2025-Jan.xlsx` and so on.
+- [CMS-T official materials](https://microdata.gov.in/NADA/index.php/catalog/239/related-materials)
+- [Official CMS-T report, Table 12, page A85](https://mospi.gov.in/sites/default/files/publication_reports/CMST_report_m.pdf#page=124)
+- [NPCI ecosystem statistics](https://www.npci.org.in/what-we-do/upi/upi-ecosystem-statistics)
 
-```bash
-pip install -r requirements.txt
-cd src
-python build_analysis.py
-python build_npci_analysis.py
-python build_charts.py
-```
-
-`build_charts.py` skips the fifth figure if the NPCI files are absent; the rest
-of the pipeline runs on CMS-T alone.
-
----
-
-## Method notes
-
-Three decisions do most of the work; all are justified in
-[`DATA_NOTES.md`](DATA_NOTES.md).
-
-**Weights.** Final weight = `mlt / 100`, per `README_CMST_2025.docx`.
-
-**The UPI variable.** The data layout describes `b4q12` as a plain online-banking
-item. The *schedule* reveals it is 4-coded, separating UPI (1), non-UPI online
-banking (2), both (3), and none (4). UPI-capable = {1, 3}. Reading only the
-layout would have led to using a proxy where a direct measure exists.
-
-**Denominators.** `b4q12` is blank for anyone not routed into Block 4 — people
-who cannot operate a phone or computer at all. For adults 15+ those blanks are
-treated as *not capable*, which is substantively correct: the schedule skips
-them because the answer is already determined. Every rate here is therefore over
-**all adults aged 15+**, not over those who happened to be asked.
-
----
-
-## Limitations
-
-- **Capability is not usage.** Q12 measures ability, not behaviour or value.
-  The survey-side gaps are enablement gaps.
-- **One quarter.** Jan–Mar 2025. No trend, no causal identification.
-- **No standard errors.** The methodology document gives the variance formula
-  for the two-stage SRSWOR design; it is not yet implemented. Point estimates
-  only. Large states are unaffected in practice, but small UTs rest on a few
-  hundred observations and their rankings should not be read closely.
-- **Ecological inference.** Capability is measured per person, NPCI volume per
-  state. The merge supports statements about states, not about individuals
-  within them. No segment-level transaction claim is made anywhere.
-- **Per-capita usage is resident-denominated.** State volume includes payments
-  by visitors and by businesses headquartered there. Goa and Delhi sit far above
-  trend partly for this reason; their residuals are not pure behavioural
-  outperformance.
-- **The sizing is a ceiling, not a forecast.** It applies an observed intensity
-  benchmark to a population that does not yet transact. It answers "how large is
-  this opportunity", not "what will happen".
-- **MPCE deliberately unused.** MoSPI's user note warns against building
-  estimates on auxiliary variables; CMS-T is not a consumption survey.
+Original NPCI workbooks supplied by the project owner match the analysis inputs
+cell-for-cell. They have not been independently re-downloaded from NPCI.
