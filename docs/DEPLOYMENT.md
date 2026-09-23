@@ -14,8 +14,8 @@ Atlas. Render Singapore is the nearest available Render region to the chosen
 Atlas Mumbai database; they do not need to be in the same region to connect.
 
 1. Sign in to Render and create a Blueprint from this repository, using branch
-   `feature/mern-application`. The corrected application currently lives on that
-   review branch, not main. Alternatively create a Node web service using the
+   `feature/mern-application`. The latest cleanup and deployment fixes live on
+   that review branch. Alternatively create a Node web service using the
    settings in the table below.
 2. Enter `MONGODB_URI` directly in Render's secret environment settings. Use the
    `upi_app` user and `/upi` database path. Never commit the URI or paste it into
