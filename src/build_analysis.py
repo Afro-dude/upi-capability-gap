@@ -14,7 +14,7 @@ import pandas as pd
 
 from cmst import (
     load_person, load_household, wmean, wtotal, rate_table,
-    PROCESSED, OUTPUTS, AGE_LABELS,
+    PROCESSED,
 )
 from validation import official_state_check
 
@@ -95,20 +95,8 @@ def transition_checks(adults):
     return pd.DataFrame(rows)
 
 
-def funnel_by(adults, by):
-    """Same funnel, split by one or more columns, in wide form."""
-    frames = []
-    for col, label in FUNNEL:
-        t = rate_table(adults, by, col)[by + ["rate"]]
-        t["stage"] = label
-        frames.append(t)
-    long = pd.concat(frames)
-    return long.pivot_table(index=by, columns="stage", values="rate")
-
-
 def main():
     PROCESSED.mkdir(parents=True, exist_ok=True)
-    OUTPUTS.mkdir(parents=True, exist_ok=True)
     person = load_person()
     hh = load_household()
     adults = person[person["age"] >= 15].copy()
@@ -142,11 +130,6 @@ def main():
         print(f"  {r['stage']:<38} {r['pct_of_adults']:6.1%}")
     print()
 
-    funnel_by(adults, ["sector_name"]).to_csv(PROCESSED / "funnel_by_sector.csv")
-    funnel_by(adults, ["sector_name", "gender_name"]).to_csv(
-        PROCESSED / "funnel_by_sector_gender.csv")
-    funnel_by(adults, ["age_band"]).to_csv(PROCESSED / "funnel_by_age.csv")
-
     # ---------------- 2. Segment gap table -----------------------------
     seg_cols = ["state", "state_code", "sector_name", "age_band", "gender_name"]
     seg = rate_table(adults, seg_cols, "s7_upi_capable")
@@ -158,10 +141,6 @@ def main():
     seg["gap_pop"] = seg["adult_pop"] - seg["upi_capable_pop"]
     seg = seg.sort_values("gap_pop", ascending=False)
     seg.to_csv(PROCESSED / "segment_gap_table.csv", index=False)
-    national_seg = rate_table(adults, ['sector_name', 'age_band', 'gender_name'], 's7_upi_capable')
-    national_seg['gap_pop'] = national_seg.pop_weighted - national_seg.count_weighted
-    national_seg.to_csv(PROCESSED / 'national_segments.csv', index=False)
-
     print("TEN LARGEST CAPABILITY GAPS BY SEGMENT")
     print("(segment = state x sector x age band x sex)")
     top = seg[~seg["unreliable"]].head(10)
@@ -172,24 +151,7 @@ def main():
               f"gap {r['gap_pop']/1e6:5.2f}m people")
     print()
 
-    # Coarser segment view, national
-    for by in (["sector_name"], ["gender_name"], ["age_band"],
-               ["sector_name", "gender_name"]):
-        t = rate_table(adults, by, "s7_upi_capable")
-        name = "_".join(c.replace("_name", "") for c in by)
-        t.to_csv(PROCESSED / f"upi_rate_by_{name}.csv", index=False)
-
-    # ---------------- 3. Barriers --------------------------------------
-    # Person-level Q16 is asked only of people able to use the internet who
-    # did not use it in 3 months -- a narrow group. The household-level
-    # Block 5 Q5 covers every household without home internet, so it is the
-    # more useful barrier variable. Both are written out.
-    pb = person[person["reason_no_internet"].notna()]
-    pbt = rate_table(pb, ["sector_name", "reason_no_internet"], "s1_can_use_device")
-    pbt["share_within_sector"] = pbt.groupby("sector_name")["pop_weighted"].transform(
-        lambda s: s / s.sum())
-    pbt.to_csv(PROCESSED / "barriers_person.csv", index=False)
-
+    # Household-level main reasons for no internet at home.
     hb = hh[hh["reason_no_internet_hh"].notna()].copy()
     hbt = (hb.groupby(["sector_name", "reason_no_internet_hh"], observed=True)
              .agg(n_unweighted=("weight", "size"),

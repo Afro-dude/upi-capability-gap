@@ -51,14 +51,6 @@ def regression(d):
     out.loc[out.included_in_fit & out.residual.lt(0),'comparison_label']='Below descriptive fitted line'
     return out,fit
 
-def population_scenario(gap_population, assumed_share):
-    """A transparent what-if calculation. Does not predict intervention impact."""
-    if not np.isfinite(gap_population) or gap_population < 0:
-        raise ValueError('Excluded population must be finite and nonnegative')
-    if not np.isfinite(assumed_share) or not 0 <= assumed_share <= 1:
-        raise ValueError('Assumed share must be between 0 and 1')
-    return gap_population*assumed_share
-
 def main():
     PROCESSED.mkdir(parents=True,exist_ok=True)
     cap=capability_by_state()
@@ -87,11 +79,6 @@ def main():
                    'r_squared':fit.rvalue**2,'slope':fit.slope,'intercept':fit.intercept,
                    'interpretation':'Descriptive association; no causal or intervention interpretation'}]
                 ).to_csv(PROCESSED/'descriptive_fit.csv',index=False)
-    gap=cap.adult_pop.sum()-cap.upi_capable_pop.sum()
-    pd.DataFrame([{'assumed_share':s,'baseline_excluded_population':gap,
-                   'hypothetical_newly_capable_population':population_scenario(gap,s),
-                   'interpretation':'User assumption applied to a survey point estimate; not a forecast'}
-                  for s in [0.05,0.10,0.25]]).to_csv(PROCESSED/'opportunity_sizing.csv',index=False)
     print(f'Joined {len(d)} states; {unc_vol/total:.2%} of national volume unclassified.')
     print(f'Descriptive fit on {d.included_in_fit.sum()} states: R2={fit.rvalue**2:.3f}.')
     print('Allocation invariance is not evidence that real state rankings are robust.')

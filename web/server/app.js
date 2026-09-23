@@ -25,10 +25,16 @@ const schema = buildSchema(`
 export function createApp({
   activeVersion,
   dev = false,
-  origin = process.env.APP_ORIGIN,
+  origin = process.env.APP_ORIGIN || process.env.RENDER_EXTERNAL_URL,
 } = {}) {
   const app = express();
   app.disable("x-powered-by");
+  const proxyHops = Number(process.env.TRUST_PROXY_HOPS || 0);
+  if (!Number.isInteger(proxyHops) || proxyHops < 0 || proxyHops > 5)
+    throw new Error("Invalid TRUST_PROXY_HOPS");
+  if (proxyHops) app.set("trust proxy", proxyHops);
+  if (process.env.NODE_ENV === "production" && !origin?.startsWith("https://"))
+    throw new Error("Set APP_ORIGIN to the public HTTPS origin");
   app.use(
     helmet({
       contentSecurityPolicy: dev
@@ -43,6 +49,13 @@ export function createApp({
     }),
   );
   app.use(express.json({ limit: "32kb" }), cookieParser());
+  app.get("/healthz", (req, res) =>
+    res
+      .status(mongoose.connection.readyState === 1 ? 200 : 503)
+      .json({
+        status: mongoose.connection.readyState === 1 ? "ready" : "unavailable",
+      }),
+  );
   app.use(
     "/graphql",
     rateLimit({
@@ -50,6 +63,11 @@ export function createApp({
       limit: 180,
       standardHeaders: "draft-8",
       legacyHeaders: false,
+      message: {
+        errors: [
+          { message: "Too many requests. Please wait a minute and try again." },
+        ],
+      },
     }),
   );
   app.post("/graphql", async (req, res) => {
@@ -184,18 +202,16 @@ export function createApp({
     }
   });
   app.use((err, req, res, next) =>
-    res
-      .status(err.status || 500)
-      .json({
-        errors: [
-          {
-            message:
-              err.status === 413
-                ? "Request too large"
-                : "Request could not be processed",
-          },
-        ],
-      }),
+    res.status(err.status || 500).json({
+      errors: [
+        {
+          message:
+            err.status === 413
+              ? "Request too large"
+              : "Request could not be processed",
+        },
+      ],
+    }),
   );
   return app;
 }

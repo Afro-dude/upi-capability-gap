@@ -83,6 +83,10 @@ when distributing the application.
 
 ## Hosting configuration
 
+The repository includes a Render configuration. Follow
+[the deployment guide](../docs/DEPLOYMENT.md) for the production branch,
+Atlas network access, health checks and the final website URL.
+
 Build first, then set these environment variables on the host:
 
 ```dotenv

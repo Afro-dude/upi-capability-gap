@@ -48,6 +48,9 @@ async function request(query, variables = {}, cookie = "", headers = {}) {
 const save = `mutation($version:ID!,$filters:Filters!){saveComparison(version:$version,filters:$filters,title:"Test comparison",note:"Test only"){id datasetId summary filters}}`;
 
 test("GraphQL serves the validated baseline and immutable version", async () => {
+  const health = await fetch(url.replace("/graphql", "/healthz"));
+  assert.equal(health.status, 200);
+  assert.equal((await health.json()).status, "ready");
   const r = await request("{dataset{id} analysis{rate sample states{state}}}");
   assert.equal(r.status, 200);
   assert.equal(r.body.errors, undefined);

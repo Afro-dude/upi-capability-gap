@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import dns from "node:dns";
 import { mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
@@ -31,6 +32,12 @@ export const Comparison = mongoose.model(
 );
 
 export async function connectDatabase(uri = process.env.MONGODB_URI) {
+  // Optional process-local override for networks whose default SRV resolver fails.
+  if (process.env.MONGODB_DNS_SERVERS) {
+    dns.setServers(
+      process.env.MONGODB_DNS_SERVERS.split(",").map((s) => s.trim()),
+    );
+  }
   let local;
   if (!uri) {
     if (process.env.NODE_ENV === "production")

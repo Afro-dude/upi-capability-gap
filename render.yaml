@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: upi-capability-gap
+    runtime: node
+    plan: free
+    region: singapore
+    branch: feature/mern-application
+    buildCommand: npm --prefix web ci --include=dev && npm --prefix web run build
+    startCommand: npm --prefix web start
+    healthCheckPath: /healthz
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: 24.18.0
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: TRUST_PROXY_HOPS
+        value: "1"
+      - key: MONGODB_URI
+        sync: false

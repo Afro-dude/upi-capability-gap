@@ -1,8 +1,6 @@
 # Power BI migration and rebuild
 
-The previous PBIX and screenshot in `docs/legacy/` are superseded. They contain
-old text, measures and cached data. **Do not present them as the corrected
-analysis.** The corrected five-page report is now available at
+The corrected five-page report is available at
 `powerbi/UPI Capability Gap.pbix`, with an editable project in the same folder.
 It was loaded, refreshed, visually checked and saved in Power BI Desktop
 2.157.1354.0. All five pages rendered; national headlines, demographic filtering
@@ -76,13 +74,13 @@ must remain visible in appropriate tables/tooltips. HP remains provisional.
 - Remove `retention_from_prev` and `lost_here_crore` visuals/measures.
 - Replace `predicted_txn_per_adult` with `fitted_classified_txn_per_adult`.
 - Replace `performance` with neutral `comparison_label`.
-- The `opportunity_sizing.csv` output now contains hypothetical population
-  changes, not billions of transactions or an enablement ceiling.
+- Population scenarios are calculated dynamically by the MERN app and Power BI;
+  the superseded static opportunity-sizing export has been removed.
 - Third-category records are retained in the exports to reconcile totals.
 - Source validation and national classified/unclassified totals have dedicated facts.
 
 Delete old static claims about merchant-side constraints, the irrelevance of
 unclassified volume, precise rankings, and intervention returns. Recheck
 filters, labels and cached values in Desktop before publishing or sharing a
-new screenshot. The current PBIX is a separate validated build; archived files
-remain unchanged historical artifacts.
+new screenshot. The current PBIX is the validated build. Superseded files have been removed;
+Git history retains earlier revisions.

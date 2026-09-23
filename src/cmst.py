@@ -21,7 +21,6 @@ import pandas as pd
 BASE = Path(__file__).resolve().parent.parent
 RAW = BASE / "data" / "raw"
 PROCESSED = BASE / "data" / "processed"
-OUTPUTS = BASE / "outputs"
 
 # --------------------------------------------------------------------------
 # State codes -- Data_Layout_CMST_2025.xlsx, sheet "State code"
