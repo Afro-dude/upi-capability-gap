@@ -2,9 +2,13 @@
 
 ## Current status
 
-The Atlas `upi` database has been connected and the validated aggregate snapshot
-imported. A public application URL is not available until the hosting deployment
-finishes. Local access: http://127.0.0.1:3000.
+Live site: **https://upi-capability-gap.onrender.com**.
+
+Deployment verified on 23 September 2026: the health check and GraphQL queries
+return successfully; national results and demographic filters match the audited
+baseline; a saved comparison remains available after a browser reload. Render
+connects to the Atlas `upi` database using the restricted application user.
+Local development remains available at http://127.0.0.1:3000.
 
 ## Render configuration
 
@@ -24,8 +28,7 @@ Atlas Mumbai database; they do not need to be in the same region to connect.
    IP access list. Keep access limited to those ranges and your development IP.
 4. Deploy and wait for the `/healthz` check to pass.
 5. Verify overview, filters, scenario results and a saved comparison at the
-   actual HTTPS URL. Replace the pending-deployment text in README with that
-   verified URL; do not guess an `onrender.com` address from the service name.
+   actual HTTPS URL. If the URL changes, update README with the verified URL.
 
 | Setting | Value |
 |---|---|

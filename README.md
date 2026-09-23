@@ -6,9 +6,10 @@ state-attributed transaction volumes are a separate, exploratory comparison.
 
 ## Website
 
-[Open the local app](http://127.0.0.1:3000) · [Deployment instructions](docs/DEPLOYMENT.md)
+[Open UPI Observatory](https://upi-capability-gap.onrender.com) · [Deployment instructions](docs/DEPLOYMENT.md)
 
-Public deployment is pending hosting setup. The verified live URL will be added here after deployment.
+The MERN application is live on Render with MongoDB Atlas. The free hosting
+instance may take around a minute to wake after inactivity.
 
 ## Results and their limits
 
