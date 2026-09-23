@@ -1,39 +1,35 @@
-# Revised MERN scope
+# MERN implementation and scope
 
-The web application will use MongoDB, Express, React and Node.js. To honour
-the request to avoid REST as well as FastAPI, use GraphQL through Express.
-The Python analysis remains an offline reproducible data-production pipeline;
-no Python web server is needed. Implementation of the MERN app is a separate
-step from this methodology correction.
+The application is implemented in `web/`; see [its run guide](../web/README.md).
+MongoDB stores versioned aggregate snapshots and browser-private comparisons.
+Express and Node expose GraphQL to React. Python remains an offline analytics
+pipeline; no Python web server or REST analytics API is needed.
 
-## First version
+The six pages cover the national overview, demographic/state capability
+exploration, classified NPCI activity, population what-ifs, methodology and
+saved comparisons. Source hashes and CSV exports support inspection.
 
-- A React capability explorer for age, sex and sector with permitted state
-  views, coverage information and explicit source discrepancy warnings.
-- Saved comparisons and notes tied to a dataset version in MongoDB.
-- An assumption-based population calculator: estimated excluded population
-  multiplied by a user-selected share becoming capable. No ML or transaction
-  forecast. State scenarios remain disabled while source/uncertainty issues
-  are unresolved; national scenarios retain the baseline caveats.
-- An optional, separate NPCI exploratory page using classified volumes with
-  national unclassified share shown prominently. No automatic intervention
-  ranking, merchant diagnosis or demographic transaction estimates.
-- Admin imports of validated aggregate datasets and their source manifest,
-  validation results, reporting period and uncertainty status.
+## Methodology carried into the application
 
-## Import and query rules
+- Rates are computed from summed weighted numerators and denominators.
+- All recorded sex categories and all states remain in national estimates.
+- Conditional indicators use respondent intersections, not subtraction.
+- Cells below 30 respondents have their displayed rate withheld. This is not
+  a confidence interval or a claim of precision above the threshold.
+- Himachal Pradesh's online-banking check remains provisional, with a focused
+  note when selected and details in Methods. It is not a national-page headline.
+- NPCI unclassified volume is retained nationally and never redistributed into
+  the observed state figures. There are no demographic transaction filters.
+- The scatter displays observed state points without a fitted line. It cannot
+  diagnose merchant acceptance, individual behaviour or programme effects.
+- What-ifs multiply excluded population by a user-selected share. They do not
+  need ML, and predict neither transactions nor causal effects. State scenarios
+  remain disabled.
 
-Store numerators and denominators as well as rates, and recompute aggregate
-rates from summed components. Do not average percentages. Preserve state codes
-as strings, raw-data exclusions, all sex categories in totals, the distinction
-between structural skips and missing eligible answers, and source version IDs.
+Imports validate aggregate consistency and preserve immutable versions. The
+Python build owns raw source decoding and state-month duplicate checks. A local
+admin command imports validated aggregates; there is no public upload endpoint.
 
-Import must reject duplicate state-months, incomplete quarter coverage, unknown
-state mappings, inconsistent totals and unrecognised validation failures.
-HP remains flagged until a documented reconciliation; excluding it from a
-descriptive fit must not silently exclude it from national population totals.
-Do not call a sample-size threshold a confidence interval or precision score.
-
-Future transaction forecasting needs compatible outcome data and independent
-validation. Programme-effect prediction additionally needs an appropriate
-causal evaluation design. Choosing MERN or adding ML does not supply either.
+Future account-based collaboration, fresh NPCI source verification, confidence
+intervals and validated forecasting require additional work or source material.
+They are not implied by adding a web interface.
