@@ -29,7 +29,23 @@ diagnose merchant acceptance, individual behaviour, or intervention needs.
 Allocation rules which preserve rankings by construction cannot establish
 robustness to the unknown real missing-data pattern.
 
-## Dashboard
+## MERN web application
+
+The [UPI Observatory](web/README.md) uses **MongoDB, Express, React and Node.js**,
+with GraphQL. It provides six pages: overview, capability explorer, classified
+NPCI transactions, a what-if calculator, methods, and saved comparisons.
+
+```sh
+cd web
+npm ci
+npm run dev
+```
+
+Open http://127.0.0.1:3000. The first run downloads a local MongoDB binary;
+subsequent runs reuse it and retain saved notes. See the [app guide](web/README.md)
+for configuration, production builds, data imports and browser-scoped saves.
+
+## Original analytics dashboard
 
 ```sh
 pip install -r requirements.txt

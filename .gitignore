@@ -8,3 +8,9 @@ venv/
 **/.pbi/cache.abf
 **/.pbi/localSettings.json
 **/.pbi/unappliedChanges.json
+node_modules/
+web/dist/
+web/.local/
+web/.env
+web/test-results/
+web/playwright-report/
