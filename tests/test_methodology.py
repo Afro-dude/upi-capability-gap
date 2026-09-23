@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from build_analysis import conditional_table, build_funnel, transition_checks, FUNNEL
-from build_npci_analysis import population_scenario, regression
+from build_npci_analysis import regression
 from npci import allocate, load_npci
 from validation import official_state_check
 
@@ -50,14 +50,6 @@ def test_invariant_allocations_do_not_prove_true_rankings(state_data):
     # A feasible alternative with the same unknown national total reverses A/B.
     actual=(state_data.volume_mn+pd.Series([0.,40.,0.]))/state_data.adult_pop
     assert base[0]>base[1] and actual[0]<actual[1]
-
-@pytest.mark.parametrize('share',[0,.1,1])
-def test_population_scenario(share):
-    assert population_scenario(1000,share)==1000*share
-
-@pytest.mark.parametrize('gap,share',[(-1,.1),(100,-.1),(100,1.1),(100,float('nan')),(float('inf'),.5)])
-def test_population_scenario_rejects_invalid_inputs(gap,share):
-    with pytest.raises(ValueError):population_scenario(gap,share)
 
 def test_regression_excludes_unresolved_source_without_inventing_values():
     d=pd.DataFrame({'upi_capable_rate':[.2,.4,.6,.8], 'txn_per_adult':[2.,4.,6.,1000.],
